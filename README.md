@@ -1,75 +1,101 @@
 # 🩺 Clinix — Sistema de Agendamento de Consultas
 
-O **Clinix** é um sistema de agendamento de consultas desenvolvido como projeto acadêmico do curso de **Análise e Desenvolvimento de Sistemas da FATEC Taquaritinga**.
+O **Clinix** é um sistema acadêmico de agendamento de consultas desenvolvido durante o curso de **Análise e Desenvolvimento de Sistemas da FATEC Taquaritinga**.
 
-O projeto foi criado com o objetivo de aplicar, na prática, conceitos de **desenvolvimento web, banco de dados relacional, SQL, modelagem de dados e documentação de sistemas**.
+O projeto foi criado com o objetivo de aplicar conceitos de **desenvolvimento web, banco de dados relacional, SQL, modelagem de dados e análise de sistemas**.
 
 ## 📌 Sobre o projeto
 
-O Clinix foi desenvolvido para representar o funcionamento de um sistema de gerenciamento de consultas, organizando informações relacionadas aos usuários envolvidos no processo de atendimento.
+O Clinix simula o funcionamento de um sistema para gerenciamento de consultas médicas, permitindo organizar informações relacionadas a pacientes, médicos, especialidades e agendamentos.
 
-O sistema contempla o cadastro e a organização de dados de:
-
-* Usuários
-* Médicos
-* Recepcionistas
-* Consultas
-
-A estrutura do banco de dados foi desenvolvida considerando os relacionamentos necessários entre as entidades do sistema.
+Além do agendamento de consultas, o banco foi estruturado para contemplar situações como pré-reservas, cancelamentos, remarcações, histórico de consultas, envio de mensagens e períodos de indisponibilidade dos médicos.
 
 ## 🗄️ Banco de Dados
 
-Uma das principais etapas do projeto foi a construção do banco de dados relacional.
+O banco de dados foi desenvolvido utilizando **Microsoft SQL Server**.
 
-Durante o desenvolvimento foram aplicados conceitos como:
+A estrutura possui as seguintes tabelas principais:
 
-* Criação de tabelas
-* Chaves primárias (Primary Keys)
-* Chaves estrangeiras (Foreign Keys)
-* Relacionamentos entre tabelas
-* Integridade dos dados
-* Organização e estruturação das informações
-* Scripts SQL para criação da estrutura do banco
+* `especialidades` — cadastro das especialidades médicas;
+* `paciente` — informações cadastrais e de acesso dos pacientes;
+* `recepcionistas` — dados dos responsáveis pelo atendimento;
+* `medicos` — cadastro dos médicos e relacionamento com suas especialidades;
+* `consultas` — gerenciamento dos agendamentos;
+* `pre_reservas` — controle temporário de horários antes da confirmação;
+* `historico_consultas` — registro de cancelamentos, remarcações e alterações;
+* `mensagens_enviadas` — controle das comunicações relacionadas às consultas;
+* `feriados` — armazenamento de datas sem atendimento;
+* `medicos_inativos` — controle dos períodos de indisponibilidade dos médicos.
 
-O banco foi desenvolvido utilizando **MySQL**.
+## 🔗 Modelagem Relacional
 
-## 🧩 Modelagem e documentação
+O banco utiliza relacionamentos entre suas tabelas por meio de **Primary Keys** e **Foreign Keys**.
 
-Além do desenvolvimento do sistema e do banco de dados, o projeto também possui documentação para representar sua estrutura e funcionamento.
+Entre os principais relacionamentos estão:
 
-Foram utilizados **diagramas UML** para auxiliar na análise e modelagem do sistema.
+* Especialidade → Médicos
+* Paciente → Consultas
+* Médico → Consultas
+* Paciente → Pré-reservas
+* Médico → Pré-reservas
+* Consulta → Histórico de consultas
+* Consulta → Mensagens enviadas
+* Médico → Períodos de inatividade
 
-Essa etapa permitiu planejar as entidades, os usuários envolvidos e as interações existentes dentro da aplicação antes e durante o desenvolvimento.
+Também foram utilizadas restrições `CHECK` para controlar determinados valores permitidos no sistema, como:
+
+* origem da criação da consulta;
+* status da consulta;
+* tipo de alteração no histórico;
+* tipo de mensagem enviada.
+
+## ⚙️ Funcionalidades representadas no banco
+
+A estrutura do banco permite representar processos como:
+
+* Cadastro de pacientes;
+* Cadastro de médicos e especialidades;
+* Cadastro de recepcionistas;
+* Agendamento de consultas;
+* Pré-reserva de horários;
+* Cancelamento e remarcação de consultas;
+* Registro do histórico de alterações;
+* Controle de status das consultas;
+* Registro de notificações enviadas;
+* Controle de feriados;
+* Controle de períodos de indisponibilidade médica.
 
 ## 💻 Tecnologias utilizadas
 
 * HTML
 * CSS
 * SQL
-* MySQL
+* Microsoft SQL Server
 * UML
 
-## 🎯 Objetivos de aprendizagem
+## 🎯 Conhecimentos aplicados
 
-O desenvolvimento do Clinix permitiu colocar em prática conhecimentos relacionados a:
+Durante o desenvolvimento do projeto foram utilizados conceitos de:
 
-* Análise de sistemas
-* Modelagem de banco de dados
-* Banco de dados relacional
-* Desenvolvimento de scripts SQL
-* Relacionamentos entre entidades
-* Desenvolvimento de interfaces web
-* Documentação de sistemas
-* Diagramas UML
+* Banco de dados relacional;
+* Modelagem de dados;
+* SQL;
+* Primary Keys e Foreign Keys;
+* Integridade referencial;
+* Restrições `CHECK`;
+* Relacionamentos entre entidades;
+* Análise de sistemas;
+* Desenvolvimento de interfaces web;
+* Diagramas UML.
 
 ## 📚 Contexto acadêmico
 
 Projeto desenvolvido em **2025** durante o curso de **Tecnologia em Análise e Desenvolvimento de Sistemas — FATEC Taquaritinga**.
 
-O projeto faz parte do meu portfólio acadêmico e demonstra a aplicação prática de conhecimentos adquiridos durante a graduação, principalmente nas áreas de **Banco de Dados e Análise de Sistemas**.
+O Clinix faz parte do meu portfólio acadêmico e demonstra a aplicação prática de conhecimentos relacionados principalmente a **Banco de Dados, SQL e Análise de Sistemas**.
 
 ## 👩‍💻 Autora
 
 **Bianca Fidele**
 
-Estudante de Análise e Desenvolvimento de Sistemas, com foco profissional em **Análise de Dados, Business Intelligence e Banco de Dados**.
+Estudante de Análise e Desenvolvimento de Sistemas, com foco em **Análise de Dados, Business Intelligence e Banco de Dados**.
