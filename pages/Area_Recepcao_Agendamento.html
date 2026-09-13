@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área da Recepção - Agendamento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --clinix-primary-blue: #004aad;
+        --clinix-secondary-blue: #00b2ff;
+        --clinix-text-dark: #333333;
+        --clinix-text-medium: #555555;
+        --clinix-input-border: #00b2ff;
+        --clinix-input-bg-readonly: #e9ecef;
+        --border-radius-button: 20px;
+        --border-radius-input: 30px; 
+        --font-family-base: 'Inter', sans-serif;
+        /* --- INÍCIO DA CORREÇÃO --- */
+        --clinix-danger-red: #dc3545;
+        --clinix-danger-red-light: #f8d7da;
+        --clinix-danger-red-dark: #721c24;
+        /* --- FIM DA CORREÇÃO --- */
+    }
+    body {
+      font-family: var(--font-family-base);
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+    .container-recepcao-agendamento {
+      padding: 20px 30px; 
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .top-bar-recepcao-agendamento {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px; 
+    }
+    .logo-recepcao-agendamento img {
+      height: 60px; 
+    }
+    .user-info-recepcao-agendamento {
+      text-align: right;
+      font-size: 14px;
+    }
+    .user-info-recepcao-agendamento strong {
+        color: var(--clinix-primary-blue);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 2px;
+    }
+    .user-info-recepcao-agendamento span {
+        color: var(--clinix-text-dark);
+        font-weight: 500;
+    }
+    .btn-sair-recepcao-agendamento { 
+      background-color: var(--clinix-primary-blue);
+      color: white;
+      border-radius: 15px;
+      padding: 6px 18px;
+      border: none;
+      text-decoration: none; 
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 5px; 
+      display: inline-block;
+      transition: background-color 0.2s ease;
+    }
+    .btn-sair-recepcao-agendamento:hover {
+        background-color: #003a8c; 
+    }
+
+    .main-title-recepcao-agendamento {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--clinix-text-dark);
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    .tabs-navigation-recepcao-agendamento {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .tabs-navigation-recepcao-agendamento label { 
+        font-weight: 600; 
+        font-size: 16px; 
+        display: flex; 
+        align-items: center; 
+        cursor: pointer;
+        color: var(--clinix-text-medium);
+    }
+    .tabs-navigation-recepcao-agendamento input[type="radio"] { 
+        transform: scale(1.3); 
+        margin-right: 8px; 
+        accent-color: var(--clinix-primary-blue); 
+    }
+    .tabs-navigation-recepcao-agendamento input[type="radio"]:checked + span,
+    .tabs-navigation-recepcao-agendamento label:has(input[type="radio"]:checked) {
+        color: var(--clinix-primary-blue);
+    }
+
+    .form-layout-container {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        width: 100%;
+        max-width: 900px;
+        margin: 40px auto 0;
+    }
+    .form-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        min-width: 0;
+    }
+    .form-group-recepcao-agendamento {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px; 
+    }
+    .form-group-recepcao-agendamento label {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--clinix-text-medium);
+    }
+    .form-group-recepcao-agendamento input,
+    .form-group-recepcao-agendamento textarea,
+    .form-group-recepcao-agendamento select { 
+      border: 2px solid var(--clinix-input-border);
+      border-radius: var(--border-radius-input);
+      padding: 12px 20px;
+      width: 100%; 
+      text-align: center;
+      box-sizing: border-box; 
+      font-size: 15px; 
+      font-family: 'Inter', sans-serif;
+    }
+    .form-group-recepcao-agendamento input[readonly] {
+      background-color: var(--clinix-input-bg-readonly); 
+      cursor: not-allowed;
+      border-color: #ccc;
+    }
+    .date-time-row {
+        display: flex;
+        gap: 20px;
+    }
+    .form-group-recepcao-agendamento.small {
+        flex: 1;
+    }
+    .form-group-recepcao-agendamento textarea {
+      height: 180px; 
+      resize: vertical;
+      text-align: left; 
+    }
+    
+    .btn-confirmar-recepcao-agendamento { 
+      display: block;
+      margin: 40px auto 0;
+      background-color: var(--clinix-primary-blue);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius-button);
+      padding: 12px 40px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    /* --- INÍCIO DA CORREÇÃO --- */
+    #agendamento-recepcao-error-box {
+        background-color: var(--clinix-danger-red-light);
+        color: var(--clinix-danger-red-dark);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto 20px auto;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        padding-top: 0;
+        padding-bottom: 0;
+        transition: opacity 0.3s ease, max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+    }
+    #agendamento-recepcao-error-box.show {
+        opacity: 1;
+        max-height: 50px;
+        padding: 12px 15px;
+        margin-top: 30px;
+    }
+    /* --- FIM DA CORREÇÃO --- */
+
+    .modal-recepcao-agendamento { 
+      display: none; 
+      position: fixed;
+      z-index: 9999; 
+      left: 0;
+      top: 0;
+      width: 100vw; 
+      height: 100vh; 
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content-recepcao-agendamento {
+      background-color: white;
+      padding: 30px 40px; 
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25); 
+      width: 90%; 
+      max-width: 480px;
+      border-top: 5px solid var(--clinix-secondary-blue);
+    }
+    .modal-content-recepcao-agendamento h2 {
+      margin-top: 0;
+      margin-bottom: 20px; 
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--clinix-text-dark); 
+    }
+    #modalMessage {
+      font-size: 15px;
+      color: var(--clinix-text-medium);
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+    .modal-content-recepcao-agendamento .btn-confirmar-modal { 
+      background-color: var(--clinix-primary-blue); 
+      color: white;
+      border: none;
+      border-radius: var(--border-radius-button); 
+      padding: 12px 40px; 
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px; 
+      display: inline-block; 
+      transition: background-color 0.2s ease;
+    }
+    .modal-content-recepcao-agendamento .btn-confirmar-modal:hover {
+      background-color: #003a8c; 
+    }
+
+    @media (max-width: 768px) {
+        .top-bar-recepcao-agendamento { flex-direction: column; gap: 15px; }
+        .user-info-recepcao-agendamento { text-align: center; }
+        .main-title-recepcao-agendamento { font-size: 28px; }
+        .form-layout-container { flex-direction: column; gap: 0; }
+        .date-time-row { flex-direction: column; gap: 25px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-recepcao-agendamento">
+    <div class="top-bar-recepcao-agendamento">
+      <div class="logo-recepcao-agendamento">
+        <img src="../assets/icons/logo.png" alt="Logo Clinix"> 
+      </div>
+      <div class="user-info-recepcao-agendamento">
+        <strong>CONECTADO(A) COMO:</strong>
+        <span id="nomeUsuarioRecepcaoAgendamento">CARREGANDO...</span><br> 
+        <button class="btn-sair-recepcao-agendamento" id="btnSairRecepcaoAgendamento">Sair</button> 
+      </div>
+    </div>
+
+    <h1 class="main-title-recepcao-agendamento">Área da Recepção</h1>
+
+    <div class="tabs-navigation-recepcao-agendamento">
+      <label><input type="radio" name="tipoVisualizacaoRecepcao" value="consultas"> <span>CONSULTAS</span></label>
+      <label><input type="radio" name="tipoVisualizacaoRecepcao" value="agendamento" checked> <span>AGENDAMENTO</span></label>
+    </div>
+
+    <form id="agendamentoConsultaRecepcaoForm" method="POST" action="../backend/recepcao_agendar_consulta.php">
+        <div class="form-layout-container">
+            <div class="form-column">
+                <div class="form-group-recepcao-agendamento">
+                    <label for="cpfPacienteAgendamento">CPF DO PACIENTE</label>
+                    <input type="text" id="cpfPacienteAgendamento" name="cpf" placeholder="000.000.000-00" required>
+                </div>
+                <div class="form-group-recepcao-agendamento">
+                    <label for="nomePacienteAgendamento">NOME DO PACIENTE</label>
+                    <input type="text" id="nomePacienteAgendamento" name="nome" placeholder="Nome será preenchido automaticamente" required readonly>
+                </div>
+                <div class="form-group-recepcao-agendamento">
+                    <label for="medicoAgendamento">MÉDICO</label>
+                    <select id="medicoAgendamento" name="medico_id" required> 
+                        <option value="">Carregando médicos...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-column">
+                <div class="date-time-row">
+                    <div class="form-group-recepcao-agendamento small">
+                        <label for="dataAgendamento">DIA</label>
+                        <input type="date" id="dataAgendamento" name="data" required>
+                    </div>
+                    <div class="form-group-recepcao-agendamento small">
+                        <label for="horaAgendamento">HORA</label>
+                        <input type="time" id="horaAgendamento" name="hora" required>
+                    </div>
+                </div>
+                <div class="form-group-recepcao-agendamento">
+                    <label for="orientacoesAgendamento">ORIENTAÇÕES DE CONSULTA (Opcional)</label>
+                    <textarea id="orientacoesAgendamento" name="orientacoes"></textarea>
+                </div>
+            </div>
+        </div>
+        <!-- --- INÍCIO DA CORREÇÃO --- -->
+        <div id="agendamento-recepcao-error-box"></div>
+        <!-- --- FIM DA CORREÇÃO --- -->
+        <button class="btn-confirmar-recepcao-agendamento" type="submit" id="btnConfirmarAgendamentoRecepcao">Confirmar Consulta</button>
+    </form>
+  </div>
+
+  <div class="modal-recepcao-agendamento" id="modalConfirmacaoAgendamento">
+    <div class="modal-content-recepcao-agendamento">
+      <h2 id="modalTitle">Processo Concluído</h2>
+      <p id="modalMessage">A consulta foi agendada com sucesso.</p>
+      <button class="btn-confirmar-modal" id="btnConfirmarRedirecionamentoModalAgendamento">OK</button> 
+    </div>
+  </div>
+
+  <script>
+    async function carregarNomeRecepcionistaAgendamento() {
+        const nomeUsuarioDisplay = document.getElementById('nomeUsuarioRecepcaoAgendamento');
+        const nomeSalvo = sessionStorage.getItem('recepcionista_nome_sessao');
+        if (nomeUsuarioDisplay) {
+            nomeUsuarioDisplay.textContent = nomeSalvo || 'Recepcionista';
+        }
+    }
+
+    async function popularMedicosAgendamento() {
+        const medicoSelect = document.getElementById('medicoAgendamento');
+        if (!medicoSelect) return;
+        try {
+            const response = await fetch('../backend/listar_medicos_agendamento.php');
+            const data = await response.json();
+            if (data.success && data.medicos) {
+                medicoSelect.innerHTML = '<option value="">Selecione um médico...</option>';
+                data.medicos.forEach(medico => {
+                    const option = document.createElement('option');
+                    option.value = medico.id;
+                    option.textContent = medico.nome_display;
+                    medicoSelect.appendChild(option);
+                });
+            } else {
+                medicoSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+            }
+        } catch (error) {
+            console.error("Erro ao buscar médicos:", error);
+            medicoSelect.innerHTML = '<option value="">Falha na conexão</option>';
+        }
+    }
+
+    async function buscarPacientePorCPF(cpf) {
+        const nomePacienteInput = document.getElementById('nomePacienteAgendamento');
+        if (!nomePacienteInput) return;
+        
+        const cpfNumeros = cpf.replace(/\D/g, '');
+        if (cpfNumeros.length !== 11) {
+            nomePacienteInput.value = ''; 
+            nomePacienteInput.placeholder = "CPF inválido";
+            return;
+        }
+        try {
+            const response = await fetch(`../backend/recepcao_buscar_paciente_cpf.php?cpf=${cpfNumeros}`);
+            const data = await response.json();
+            if (data.success && data.nome) {
+                nomePacienteInput.value = data.nome;
+            } else {
+                nomePacienteInput.value = '';
+                nomePacienteInput.placeholder = "Paciente não encontrado";
+            }
+        } catch (error) {
+            console.error("Erro ao buscar paciente por CPF:", error);
+            nomePacienteInput.value = '';
+            nomePacienteInput.placeholder = "Erro na busca";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        carregarNomeRecepcionistaAgendamento();
+        popularMedicosAgendamento();
+
+        // --- INÍCIO DA CORREÇÃO ---
+        const errorBox = document.getElementById('agendamento-recepcao-error-box');
+
+        function showAgendamentoError(message) {
+            if (!errorBox) return;
+            errorBox.textContent = message;
+            errorBox.classList.add('show');
+            setTimeout(() => {
+                errorBox.classList.remove('show');
+            }, 5000);
+        }
+        // --- FIM DA CORREÇÃO ---
+
+        const dataInputAgendamento = document.getElementById('dataAgendamento');
+        if (dataInputAgendamento) {
+            const hoje = new Date();
+            const offset = hoje.getTimezoneOffset();
+            const hojeLocal = new Date(hoje.getTime() - (offset*60*1000));
+            dataInputAgendamento.min = hojeLocal.toISOString().split('T')[0];
+        }
+
+        const cpfInputAgendamento = document.getElementById('cpfPacienteAgendamento');
+        if (cpfInputAgendamento) {
+            cpfInputAgendamento.addEventListener('blur', function() {
+                buscarPacientePorCPF(this.value);
+            });
+             cpfInputAgendamento.addEventListener('input', function(e) { 
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                let formattedValue = '';
+                if (value.length > 9) {
+                    formattedValue = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                } else if (value.length > 6) {
+                    formattedValue = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                } else if (value.length > 3) {
+                    formattedValue = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                } else {
+                    formattedValue = value;
+                }
+                e.target.value = formattedValue;
+            });
+        }
+
+        document.querySelectorAll('input[name="tipoVisualizacaoRecepcao"]').forEach((input) => {
+            input.addEventListener('change', function () {
+                if (this.value === 'consultas') {
+                    window.location.href = 'Area_Recepcao_Consultas.html';
+                }
+            });
+        });
+
+        const btnSair = document.getElementById('btnSairRecepcaoAgendamento');
+        if (btnSair) {
+            btnSair.addEventListener('click', function() {
+                sessionStorage.removeItem('recepcionista_nome_sessao');
+                window.location.href = 'Login_Recepcao.html'; 
+            });
+        }
+        
+        const agendamentoForm = document.getElementById('agendamentoConsultaRecepcaoForm');
+        if (agendamentoForm) {
+            agendamentoForm.addEventListener('submit', async function(event) {
+                event.preventDefault(); 
+                errorBox.classList.remove('show'); // Limpa erros antigos
+
+                const consulta = {
+                    cpf: document.getElementById('cpfPacienteAgendamento').value.replace(/\D/g, ''),
+                    nome: document.getElementById('nomePacienteAgendamento').value, 
+                    medico_id: document.getElementById('medicoAgendamento').value, 
+                    data: document.getElementById('dataAgendamento').value, 
+                    hora: document.getElementById('horaAgendamento').value, 
+                    orientacoes: document.getElementById('orientacoesAgendamento').value
+                };
+                
+                // --- INÍCIO DA CORREÇÃO ---
+                if (!consulta.cpf || !consulta.nome || !consulta.medico_id || !consulta.data || !consulta.hora) {
+                    showAgendamentoError("Por favor, preencha todos os campos obrigatórios: CPF, Nome do Paciente, Médico, Dia e Hora.");
+                    return;
+                }
+                
+                const dataAgendamentoObj = new Date(consulta.data + "T00:00:00");
+                const hoje = new Date();
+                hoje.setHours(0,0,0,0);
+                if (dataAgendamentoObj < hoje) {
+                    showAgendamentoError("Não é possível agendar consultas para datas passadas.");
+                    return;
+                }
+                // --- FIM DA CORREÇÃO ---
+
+                try {
+                    const response = await fetch(agendamentoForm.action, {
+                        method: agendamentoForm.method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(consulta)
+                    });
+
+                    const resultado = await response.json();
+                    
+                    if (resultado.success) {
+                        const modal = document.getElementById('modalConfirmacaoAgendamento');
+                        const modalTitle = document.getElementById('modalTitle');
+                        const modalMessage = document.getElementById('modalMessage');
+
+                        switch (resultado.notification_status) {
+                            case 'sent':
+                                modalTitle.textContent = "Sucesso!";
+                                modalMessage.textContent = "A consulta foi agendada e o paciente notificado por WhatsApp.";
+                                break;
+                            case 'failed':
+                                modalTitle.textContent = "Atenção!";
+                                modalMessage.textContent = "A consulta foi agendada, mas HOUVE UMA FALHA ao enviar a notificação para o paciente. Verifique o número de telefone e a conexão com a API.";
+                                break;
+                            case 'not_authorized':
+                                modalTitle.textContent = "Consulta Agendada";
+                                modalMessage.textContent = "A consulta foi agendada, mas o paciente não autorizou o envio de notificações por WhatsApp.";
+                                break;
+                            default:
+                                modalTitle.textContent = "Consulta Agendada";
+                                modalMessage.textContent = "A consulta foi agendada com sucesso.";
+                        }
+                        
+                        if(modal) modal.style.display = 'flex';
+
+                    } else {
+                        showAgendamentoError(resultado.message || 'Erro ao agendar consulta. Tente novamente.');
+                    }
+
+                } catch (error) {
+                    console.error("Erro ao agendar (recepção):", error);
+                    showAgendamentoError("Erro ao comunicar com o servidor: " + error.message);
+                }
+            });
+        }
+
+        const btnConfirmarModal = document.getElementById('btnConfirmarRedirecionamentoModalAgendamento');
+        if (btnConfirmarModal) {
+            btnConfirmarModal.addEventListener('click', function() {
+                window.location.href = 'Area_Recepcao_Consultas.html';
+            });
+        }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento de Consulta - Clinix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clinix-primary-blue: #004aad;
+            --clinix-secondary-blue: #00b2ff;
+            --clinix-light-gray-bg: #f8f9fa;
+            --clinix-white-bg: #ffffff;
+            --clinix-text-dark: #333333;
+            --clinix-text-medium: #555555;
+            --font-family-base: 'Inter', sans-serif;
+            --border-radius-button: 20px;
+            --border-radius-fields: 25px;
+            --clinix-danger-red: #dc3545;
+            --clinix-danger-red-light: #f8d7da;
+            --clinix-danger-red-dark: #721c24;
+            --clinix-success-green: #28a745;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--clinix-white-bg);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .page-wrapper-agendamento {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-main-agendamento {
+            width: 100%;
+            background-color: var(--clinix-white-bg);
+            padding: 15px 0;
+        }
+
+        .header-content-agendamento {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo-section-agendamento {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .logo-section-agendamento img {
+            height: 150px;
+        }
+
+        .page-title-agendamento {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--clinix-text-dark);
+            text-align: center;
+            flex-grow: 1;
+            /* Remove a margem negativa antiga para centralizar corretamente no novo layout */
+            margin: 0 15px; 
+        }
+
+        /* --- NOVA ÁREA DE NAVEGAÇÃO (Padronizada) --- */
+        .new-navigation-area {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 25px; 
+            position: relative;
+            z-index: 50; 
+        }
+
+        .notification-bell-container {
+            position: relative;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .notification-bell-container:hover {
+            transform: scale(1.1);
+        }
+
+        .notification-bell-container img {
+            width: 32px; 
+            height: 32px;
+            display: block;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background-color: var(--clinix-danger-red);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1;
+            min-width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        /* --- MENU CÁPSULA (Padronizado) --- */
+        .menu-acessos-container { 
+            position: relative; 
+            width: 160px; 
+            height: 46px; 
+            z-index: 100;
+        }
+
+        .menu-acessos { 
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            background-color: #fff; 
+            border: 2px solid var(--clinix-primary-blue); 
+            border-radius: 15px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+            transition: max-height 0.4s ease-out; 
+            max-height: 46px; 
+        }
+
+        .menu-acessos:hover { 
+            max-height: 300px; 
+        }
+
+        .menu-acessos-header { 
+            background-color: var(--clinix-primary-blue); 
+            color: white; 
+            font-weight: bold; 
+            text-align: center; 
+            padding: 10px 21px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            height: 46px; 
+            box-sizing: border-box;
+            position: relative; 
+        }
+        
+        .menu-acessos-body { 
+            background-color: #fff;
+            color: black; 
+            font-size: 15px; 
+            text-align: center; 
+            padding: 0 10px;
+            opacity: 0; 
+            transition: opacity 0.3s ease, padding 0.3s ease;
+        }
+        
+        .menu-acessos:hover .menu-acessos-body { 
+            opacity: 1; 
+            padding-bottom: 15px;
+            padding-top: 10px;
+        }
+
+        .menu-acessos-body a { 
+            display: block; 
+            text-decoration: none; 
+            color: var(--clinix-text-dark); 
+            margin: 8px 0; 
+            font-weight: 500; 
+            cursor: pointer;
+        }
+        .menu-acessos-body a:hover { 
+            text-decoration: underline; 
+            color: var(--clinix-primary-blue); 
+        }
+
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 4px solid white;
+            position: absolute;
+            right: 15px; 
+        }
+        /* --- FIM DO CABEÇALHO PADRONIZADO --- */
+
+        .form-container-agendamento {
+            width: 100%;
+            max-width: 700px; 
+            margin-top: 40px; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-row-agendamento {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group-agendamento {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group-agendamento.full-width {
+            flex-basis: 100%;
+        }
+
+        .form-group-agendamento label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--clinix-text-medium);
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .input-agendamento, 
+        .select-agendamento, 
+        .textarea-agendamento {
+            width: 100%;
+            padding: 12px 18px;
+            border: 1.5px solid var(--clinix-secondary-blue);
+            border-radius: var(--border-radius-fields);
+            box-sizing: border-box;
+            font-size: 15px;
+            color: var(--clinix-text-dark);
+            background-color: var(--clinix-white-bg);
+        }
+        
+        .select-agendamento {
+            text-align-last: center; 
+            -moz-text-align-last: center; 
+            appearance: none; 
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 18px center; 
+            background-size: 10px auto; 
+            padding-right: 40px; 
+        }
+
+        input[type="date"].input-agendamento {
+             text-align: center;
+             color: var(--clinix-text-dark);
+        }
+        input[type="date"].input-agendamento::-webkit-calendar-picker-indicator {
+            filter: brightness(0) saturate(100%) invert(20%) sepia(79%) saturate(2476%) hue-rotate(170deg) brightness(95%) contrast(101%); 
+        }
+
+        .textarea-agendamento {
+            min-height: 120px;
+            resize: none;
+        }
+
+        .confirm-button-agendamento {
+            background-color: var(--clinix-primary-blue);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: var(--border-radius-button);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0 auto; 
+            transition: background-color 0.3s ease-in-out;
+        }
+        .confirm-button-agendamento:hover {
+            background-color: #003a8c;
+        }
+
+        .confirm-button-agendamento.success {
+            background-color: var(--clinix-success-green) !important;
+        }
+        .confirm-button-agendamento.error {
+            background-color: var(--clinix-danger-red) !important;
+        }
+        .confirm-button-agendamento:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        #agendamento-error-box {
+            background-color: var(--clinix-danger-red-light);
+            color: var(--clinix-danger-red-dark);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            transition: opacity 0.3s ease, max-height 0.3s ease, margin-bottom 0.3s ease, padding 0.3s ease;
+        }
+
+        #agendamento-error-box.show {
+            opacity: 1;
+            max-height: 50px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
+
+        .footer-contact-agendamento {
+            font-size: 13px;
+            color: var(--clinix-text-dark);
+            text-align: right;
+            width: 100%;
+            max-width: 1100px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: auto; 
+        }
+        .footer-contact-agendamento strong {
+            font-weight: 600;
+        }
+
+        @media (max-width: 992px) {
+            .header-content-agendamento {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            .page-title-agendamento {
+                margin-left: 0; 
+                order: 1; 
+                margin-bottom: 15px;
+            }
+            .logo-section-agendamento {
+                order: 2;
+                align-items: center;
+            }
+            .new-navigation-area {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+            .form-container-agendamento {
+                margin-top: 20px;
+            }
+        }
+        @media (max-width: 600px) {
+            .form-row-agendamento {
+                flex-direction: column;
+                gap: 0;
+                margin-bottom: 0;
+            }
+            .form-group-agendamento {
+                margin-bottom: 20px;
+            }
+            .page-title-agendamento {
+                font-size: 26px;
+            }
+            .footer-contact-agendamento {
+                text-align: center;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper-agendamento">
+        <div class="header-main-agendamento">
+            <div class="header-content-agendamento">
+                <div class="logo-section-agendamento">
+                    <img src="../assets/icons/logo.png" alt="Logo Clinix">
+                </div>
+                <h1 class="page-title-agendamento">Agendamento de Consulta</h1>
+                
+                <div class="new-navigation-area">
+                    <a href="Notificacoes_Paciente.html" class="notification-bell-container">
+                        <img src="../assets/icons/notificacao.png" alt="Notificações" />
+                        <span class="notification-badge" id="notificationCount">0</span> 
+                    </a>
+
+                    <div class="menu-acessos-container">
+                        <div class="menu-acessos" id="mainMenuAcessos">
+                            <div class="menu-acessos-header">
+                                Mais
+                                <span class="arrow-down"></span>
+                            </div>
+                            <div class="menu-acessos-body">
+                                <a href="Area_Paciente.html">Agendamentos</a>
+                                <a href="Perfil_Paciente.html">Perfil</a>
+                                <a href="Login_Paciente.html">Sair</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container-agendamento">
+            <form id="agendamentoConsultaForm" method="POST" action="../backend/paciente_agendar_consulta.php">
+                <div class="form-row-agendamento">
+                    <div class="form-group-agendamento full-width">
+                        <label for="medico">MÉDICO</label>
+                        <select id="medico" name="medico_id" class="select-agendamento" required>
+                            <option value="">Carregando médicos...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row-agendamento">
+                    <div class="form-group-agendamento">
+                        <label for="dia">DIA</label>
+                        <input type="date" id="dia" name="dia" class="input-agendamento" required>
+                        </div>
+                    <div class="form-group-agendamento">
+                        <label for="hora">HORA</label>
+                        <input type="time" id="hora" name="hora" class="input-agendamento" required>
+                        </div>
+                </div>
+                
+                <div id="agendamento-error-box"></div>
+
+                <div class="form-row-agendamento">
+                    <div class="form-group-agendamento full-width">
+                        <label for="observacoes">OBSERVAÇÕES/SINTOMAS A SEREM MENCIONADOS:</label>
+                        <textarea id="observacoes" name="observacoes" class="textarea-agendamento"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="confirm-button-agendamento">Confirmar Consulta</button>
+            </form>
+        </div>
+
+        <div class="footer-contact-agendamento">
+            Para mais informações telefone: <strong>(11) 11111-1111 | 1111-1111</strong>
+        </div>
+    </div>
+
+    <script>
+        // Função para atualizar o contador de notificações
+        async function atualizarContadorNotificacoes() {
+            const badge = document.getElementById('notificationCount');
+            if (!badge) return;
+
+            try {
+                // Tenta buscar do backend
+                const response = await fetch('../backend/contar_notificacoes.php');
+                const data = await response.json();
+                
+                if (data.success && data.count > 0) {
+                    badge.textContent = data.count;
+                    badge.style.display = 'flex'; // Mostra se tiver notificações
+                } else {
+                    badge.style.display = 'none'; // Esconde se for 0
+                }
+            } catch (error) {
+                console.log("Erro ao buscar notificações, mantendo oculto.", error);
+                badge.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Atualiza notificações ao carregar
+            atualizarContadorNotificacoes();
+
+            const medicoSelect = document.getElementById('medico');
+            const diaInput = document.getElementById('dia');
+            const form = document.getElementById('agendamentoConsultaForm');
+            const errorBox = document.getElementById('agendamento-error-box');
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+
+            function showAgendamentoError(message) {
+                if (!errorBox) return;
+                errorBox.textContent = message;
+                errorBox.classList.add('show');
+                setTimeout(() => {
+                    errorBox.classList.remove('show');
+                }, 5000);
+            }
+
+            if (diaInput) {
+                const hoje = new Date();
+                const offset = hoje.getTimezoneOffset();
+                const hojeLocal = new Date(hoje.getTime() - (offset*60*1000));
+                diaInput.min = hojeLocal.toISOString().split('T')[0];
+            }
+
+            if (medicoSelect) {
+                try {
+                    const response = await fetch('../backend/listar_medicos_agendamento.php');
+                    if (!response.ok) throw new Error('Falha ao carregar médicos.');
+                    
+                    const data = await response.json();
+                    if (data.success && data.medicos) {
+                        medicoSelect.innerHTML = '<option value="">Selecione um médico...</option>';
+                        data.medicos.forEach(medico => {
+                            const option = document.createElement('option');
+                            option.value = medico.id;
+                            option.textContent = medico.nome_display;
+                            medicoSelect.appendChild(option);
+                        });
+                    } else {
+                        medicoSelect.innerHTML = '<option value="">Nenhum médico disponível</option>';
+                    }
+                } catch (error) {
+                    console.error("Erro no fetch de médicos:", error);
+                    medicoSelect.innerHTML = '<option value="">Erro ao carregar médicos</option>';
+                }
+            }
+
+            if (form) {
+                form.addEventListener('submit', async function(event) {
+                    event.preventDefault(); 
+                    errorBox.classList.remove('show');
+
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Agendando...';
+                    submitButton.classList.remove('success', 'error');
+
+                    const medicoIdSelecionado = medicoSelect ? medicoSelect.value : null;
+                    const diaSelecionado = diaInput ? diaInput.value : null;
+                    const horaSelecionada = document.getElementById('hora')?.value || null;
+                    
+                    if (!medicoIdSelecionado || !diaSelecionado || !horaSelecionada) {
+                        showAgendamentoError("Por favor, preencha Médico, Dia e Hora.");
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalButtonText;
+                        return;
+                    }
+                    
+                    const dadosAgendamento = {
+                        medico_id: parseInt(medicoIdSelecionado),
+                        dia: diaSelecionado.split('-').reverse().join('/'),
+                        hora: horaSelecionada,
+                        observacoes: document.getElementById('observacoes')?.value || '',
+                    };
+
+                    try {
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(dadosAgendamento)
+                        });
+
+                        const resultado = await response.json();
+
+                        if (!response.ok) throw new Error(resultado.message || 'Falha no servidor.');
+                        
+                        if (resultado.success) {
+                            submitButton.classList.add('success');
+                            submitButton.textContent = 'Agendado com Sucesso!';
+                            setTimeout(() => {
+                                window.location.href = 'Area_Paciente.html';
+                            }, 1500);
+                        } else {
+                            showAgendamentoError(resultado.message || 'Tente novamente.');
+                            submitButton.classList.add('error');
+                            submitButton.textContent = 'Falha ao Agendar';
+                            setTimeout(() => {
+                                submitButton.disabled = false;
+                                submitButton.textContent = originalButtonText;
+                                submitButton.classList.remove('error');
+                            }, 5000);
+                        }
+                    } catch (error) {
+                        showAgendamentoError("Erro de comunicação: " + error.message);
+                        submitButton.classList.add('error');
+                        submitButton.textContent = 'Erro de Conexão';
+                        setTimeout(() => {
+                            submitButton.disabled = false;
+                            submitButton.textContent = originalButtonText;
+                            submitButton.classList.remove('error');
+                        }, 5000);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+create table especialidades(
+	id int primary key identity (1,1), 
+	nome varchar(100) not null
+);
+
+select * from especialidades;
+
+
+create table paciente(
+	cpf char(11) primary key,
+	nome nvarchar(100) not null,
+	data_nascimento date not null,
+	telefone nvarchar(20) not null,
+	email nvarchar(100),
+	cep char(8),
+	endereco nvarchar(200) not null,
+	numero nvarchar(10) not null,
+	complemento nvarchar(50) not null,
+	bairro nvarchar(50) not null,
+	cidade nvarchar(50) not null,
+	estado nvarchar(100) not null,
+	termos_aceitos bit not null,
+	senha_hash nvarchar(300) not null,
+	whatsapp_autorizado bit not null
+);
+
+select * from paciente;
+
+
+create table recepcionistas (
+	id int primary key identity,
+	nome nvarchar(100) not null,
+	cpf char(11) not null,
+	telefone nvarchar(20) not null,
+	email nvarchar(100),
+	senha_hash nvarchar(300) not null,
+); 
+
+select * from recepcionistas;
+
+
+create table medicos(
+	id int primary key identity,
+	nome nvarchar(100) not null,
+	cpf char(11) not null,
+	crm nvarchar(20) not null,
+	especialidade_id int foreign key references especialidades(id),
+	telefone nvarchar(20) not null,
+	email nvarchar(100) not null,
+	ativo bit not null
+);
+
+select * from medicos;
+
+
+create table consultas(
+	id int primary key identity,
+	paciente_cpf char(11) foreign key references paciente(cpf),
+	medico_id int foreign key references medicos(id),
+	data date not null,
+	hora time not null,
+	criada_por nvarchar(15) check (criada_por in ('paciente', 'recepcionista')) not null,
+	status nvarchar(15) check (status in ('ativa','cancelada','concluida')) not null,
+	motivo_cancelamento nvarchar(max),
+	motivo_remarcacao nvarchar(max),
+);
+
+select * from consultas;
+
+
+create table pre_reservas(
+	id int primary key identity,
+	paciente_cpf char(11) foreign key references paciente(cpf),
+	medico_id int foreign key references medicos(id),
+	data date not null,
+	hora time not null,
+	data_reserva datetime default getdate(),
+	expiracao datetime not null
+);
+
+select * from pre_reservas;
+
+
+create table historico_consultas(
+	id int primary key identity,
+	consultas_id int foreign key references consultas(id),
+	paciente_cpf char(11) foreign key references paciente(cpf),
+	medico_id int foreign key references medicos(id),
+	data_original date not null,
+	hora_original time not null,
+	data_alterada date,
+	hora_alterada time,
+	motivo nvarchar(max) not null,
+	tipo nvarchar(15) check (tipo in ('cancelamento','remarcacao','concluida')) not null,
+	origem nvarchar(15) check (origem in ('paciente','recepcionista')) not null,
+);
+
+select * from historico_consultas;
+
+
+create table mensagens_enviadas(
+	id int primary key identity,
+	paciente_cpf char(11) foreign key references paciente(cpf),
+	consulta_id int foreign key references consultas(id),
+	tipo nvarchar(20) check (tipo in ('agendamento','cancelamento','lembrete','remarcacao')) not null,
+	conteudo nvarchar(max),
+	data_envio datetime not null
+);
+
+select * from mensagens_enviadas;
+
+
+create table feriados(
+	id int primary key identity,
+	data date not null,
+	descricao nvarchar(100)
+);
+
+select * from feriados;
+
+create table medicos_inativos(
+	id int primary key identity,
+	medico_id int foreign key references medicos(id),
+	data_inicio date not null,
+	data_fim date,
+	motivo nvarchar(max)
+);
+
+select * from medicos_inativos;

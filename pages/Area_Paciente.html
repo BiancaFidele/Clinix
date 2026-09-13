@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Paciente - Clinix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Cores Padronizadas */
+            --clinix-primary-blue: #004aad;
+            --clinix-secondary-blue: #00b2ff;
+            --clinix-white-bg: #ffffff;
+            --clinix-light-gray-bg: #f8f9fa; /* Fundo padrão */
+            --clinix-text-dark: #333333;
+            --clinix-text-medium: #555555;
+            --font-family-base: 'Inter', sans-serif;
+            --border-radius-button: 30px;
+            --border-radius-fields: 30px;
+            --clinix-danger-red: #dc3545;
+            --clinix-danger-red-light: #f8d7da;
+            --clinix-danger-red-dark: #721c24;
+            --clinix-success-green: #28a745;
+            
+            /* Variáveis específicas dos Cards */
+            --card-ref-border-color: #00b2ff;
+            --card-ref-bg-color: #ffffff;
+            --card-ref-text-label-color: #3C3C3C; 
+            --card-ref-text-value-color: #3C3C3C; 
+            --icon-edit-bg: #ffd700;
+            --icon-delete-bg: #e53935;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--clinix-light-gray-bg);
+            margin: 0;
+            /* Padding igual ao Perfil e Cadastro */
+            padding-left: 100px;
+            padding-right: 100px;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .page-content-area { 
+            width: 100%;
+            max-width: 1200px; /* Um pouco mais largo para caber os cards */
+        }
+
+        /* --- CABEÇALHO PADRONIZADO --- */
+        .page-header-area {
+            display: flex;
+            flex-direction: column; 
+            margin-bottom: 40px; 
+            width: 100%;
+            position: relative;
+        }
+
+        .header-top-row { 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 15px; 
+            position: relative; 
+            width: 100%;
+        }
+
+        .logo-section-paciente {
+            display: flex;
+            align-items: center;
+            z-index: 10; 
+        }
+
+        .logo-section-paciente img {
+            width: 280px; /* Tamanho padronizado */
+            height: auto;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+        .logo-section-paciente img:hover { opacity: 0.8; }
+
+        /* Título Centralizado Absolutamente */
+        .page-title-paciente {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--clinix-text-dark);
+            margin: 0;
+            line-height: 1.2;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .right-header-section {
+            display: flex;
+            align-items: center;
+            z-index: 50;
+        }
+
+        /* --- NAVEGAÇÃO (Sino + Menu) --- */
+        .new-navigation-area {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 25px; 
+            position: relative;
+        }
+
+        .notification-bell-container {
+            position: relative;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .notification-bell-container:hover { transform: scale(1.1); }
+        .notification-bell-container img { width: 32px; height: 32px; display: block; }
+        .notification-badge {
+            position: absolute; top: -2px; right: -2px; background-color: var(--clinix-danger-red); color: white;
+            border-radius: 50%; padding: 2px 5px; font-size: 11px; font-weight: 700; line-height: 1;
+            min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+            border: 2px solid #f0f2f5; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 10;
+        }
+
+        /* Menu Cápsula */
+        .menu-acessos-container { position: relative; width: 160px; height: 46px; z-index: 100; }
+        .menu-acessos { 
+            position: absolute; top: 0; right: 0; width: 100%; background-color: #fff; 
+            border: 2px solid var(--clinix-primary-blue); border-radius: 15px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; transition: max-height 0.4s ease-out; 
+            max-height: 46px; 
+        }
+        .menu-acessos:hover { max-height: 300px; }
+        .menu-acessos-header { 
+            background-color: var(--clinix-primary-blue); color: white; font-weight: bold; 
+            text-align: center; padding: 10px 21px; font-size: 16px; cursor: pointer; 
+            display: flex; justify-content: center; align-items: center; height: 46px; box-sizing: border-box; position: relative; 
+        }
+        .menu-acessos-body { 
+            background-color: #fff; color: black; font-size: 15px; text-align: center; padding: 0 10px;
+            opacity: 0; transition: opacity 0.3s ease, padding 0.3s ease;
+        }
+        .menu-acessos:hover .menu-acessos-body { opacity: 1; padding-bottom: 15px; padding-top: 10px; }
+        .menu-acessos-body a { display: block; text-decoration: none; color: var(--clinix-text-dark); margin: 8px 0; font-weight: 500; cursor: pointer; }
+        .menu-acessos-body a:hover { text-decoration: underline; color: var(--clinix-primary-blue); }
+        .arrow-down {
+            width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; 
+            border-top: 4px solid white; position: absolute; right: 15px; 
+        }
+
+        .contact-info-row { 
+            display: flex;
+            justify-content: flex-end; 
+            width: 100%;
+            margin-bottom: 25px; 
+        }
+
+        .contact-info-paciente-main {
+            font-size: 13px;
+            color: var(--clinix-text-dark);
+            text-align: right;
+        }
+        .contact-info-paciente-main strong { font-weight: 600; }
+
+        /* --- CARDS DE AGENDAMENTO --- */
+        .appointments-grid-area-paciente {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px;
+        }
+
+        .card-agendamento-paciente-ref {
+            background-color: var(--card-ref-bg-color); 
+            border: 2.5px solid var(--card-ref-border-color);
+            border-radius: 20px; 
+            padding: 20px;
+            padding-bottom: 70px; 
+            box-shadow: 0 5px 15px rgba(0, 100, 200, 0.15); 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-height: 350px; 
+        }
+
+        .card-info-paciente-ref {
+            flex-grow: 1;
+            font-size: 13.5px; 
+            line-height: 1.5;
+            color: var(--card-ref-text-value-color);
+        }
+        .card-info-paciente-ref p { margin-bottom: 10px; }
+        
+        .card-info-paciente-ref .label-ref { 
+            font-weight: 700; 
+            color: var(--card-ref-text-label-color);
+            margin-right: 5px;
+        }
+        .card-info-paciente-ref .value-ref { 
+            font-weight: 400;
+            color: var(--card-ref-text-value-color);
+        }
+
+        .card-info-paciente-ref .label-block {
+            font-weight: 700;
+            color: var(--card-ref-text-label-color);
+            display: block; 
+            margin-bottom: 2px;
+            margin-top: 10px;
+        }
+        .card-info-paciente-ref .value-block {
+            font-weight: 400;
+            color: var(--card-ref-text-value-color);
+            display: block; 
+            margin-top: 0; 
+        }
+
+        .card-actions-paciente-ref {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            bottom: 15px; 
+            left: 20px;
+            right: 20px;
+            z-index: 2; 
+        }
+
+        .action-icon-paciente-ref-wrapper {
+            width: 42px; 
+            height: 42px;
+            cursor: pointer;
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
+        }
+        .action-icon-paciente-ref-wrapper.edit-icon-ref { background-color: var(--icon-edit-bg); }
+        .action-icon-paciente-ref-wrapper.delete-icon-ref { background-color: var(--icon-delete-bg); }
+        .action-icon-paciente-ref-wrapper img { width: 20px; height: 20px; object-fit: contain; filter: brightness(0) invert(1); }
+        .action-icon-paciente-ref-wrapper:hover { transform: scale(1.1); box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background-color: #ffffff; padding: 30px 40px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); text-align: center; width: 100%; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .remarcar-modal-content { max-width: 550px; position: relative; }
+        .success-modal-content { max-width: 450px; padding-top: 40px; padding-bottom: 40px; }
+        .modal-internal-title { font-size: 24px; font-weight: 700; color: #333333; margin-top: 0; margin-bottom: 25px; }
+        .success-message { font-size: 28px; font-weight: 700; color: #333333; margin-bottom: 30px; }
+        .form-group-modal { margin-bottom: 20px; text-align: left; }
+        .form-group-modal label { display: block; font-size: 13px; font-weight: 600; color: var(--clinix-text-medium); margin-bottom: 8px; }
+        .input-modal-text-display { width: 100%; padding: 12px 18px; border: 1.5px solid #ced4da; border-radius: var(--border-radius-fields); box-sizing: border-box; font-size: 15px; color: var(--clinix-text-dark); background-color: #e9ecef; text-align: center; font-weight: 500; }
+        
+        .form-row-modal { display: flex; gap: 20px; margin-bottom: 20px; }
+        .input-modal, input[type="date"].input-modal, input[type="time"].input-modal { width: 100%; padding: 12px 18px; border: 1.5px solid var(--clinix-secondary-blue); border-radius: var(--border-radius-fields); box-sizing: border-box; font-size: 15px; color: var(--clinix-text-dark); background-color: var(--clinix-white-bg); text-align: center; }
+        input[type="date"].input-modal::-webkit-calendar-picker-indicator, input[type="time"].input-modal::-webkit-calendar-picker-indicator { filter: brightness(0.5); }
+        .modal-actions-remarcar { display: flex; justify-content: space-between; gap: 15px; margin-top: 0; }
+        .modal-actions-success { display: flex; justify-content: center; margin-top: 10px; }
+        .btn-modal { padding: 10px 25px; border: none; border-radius: var(--border-radius-button); font-size: 15px; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease-in-out, transform 0.1s ease; }
+        .btn-cancelar-remarcar { background-color: #dc3545; color: white; flex-grow: 1; }
+        .btn-cancelar-remarcar:hover { background-color: #c82333; transform: translateY(-1px); }
+        .btn-confirmar-remarcar, .btn-confirmar-success { background-color: var(--clinix-primary-blue); color: white; }
+        .btn-confirmar-remarcar { flex-grow: 1; }
+        .btn-confirmar-success { padding: 10px 40px; }
+        .btn-confirmar-remarcar:hover, .btn-confirmar-success:hover { background-color: var(--clinix-secondary-blue); color: var(--clinix-primary-blue); transform: translateY(-1px); }
+        
+        .cancelar-consulta-modal-content { max-width: 500px; padding: 30px 40px; }
+        .consulta-details-cancelamento { margin-top: 20px; margin-bottom: 30px; text-align: left; font-size: 16px; color: var(--clinix-text-dark); }
+        .consulta-details-cancelamento p { margin-bottom: 8px; }
+        .label-modal-cancel { font-weight: 600; margin-right: 5px; }
+        .modal-actions-cancelar { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; }
+        .btn-nao-cancelar { background-color: #dc3545; color: white; padding: 10px 30px; }
+        .btn-nao-cancelar:hover { background-color: #c82333; transform: translateY(-1px); }
+        .btn-sim-cancelar { background-color: var(--clinix-primary-blue); color: white; padding: 10px 30px; }
+        .btn-sim-cancelar:hover { background-color: var(--clinix-secondary-blue); color: var(--clinix-primary-blue); transform: translateY(-1px); }
+        .cancelada-success-modal-content { max-width: 450px; padding: 40px 20px; }
+        .success-message-cancel { font-size: 26px; font-weight: 700; color: #333333; margin-bottom: 30px; text-align: center; }
+        .btn-continuar-cancelado { background-color: var(--clinix-primary-blue); color: white; padding: 10px 40px; }
+        .btn-continuar-cancelado:hover { background-color: var(--clinix-secondary-blue); color: var(--clinix-primary-blue); transform: translateY(-1px); }
+
+        #modal-remarcar-error-box { background-color: var(--clinix-danger-red-light); color: var(--clinix-danger-red-dark); border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; max-height: 0; overflow: hidden; padding-top: 0; padding-bottom: 0; margin-bottom: 0; transition: opacity 0.3s ease, max-height 0.3s ease, margin-bottom 0.3s ease, padding 0.3s ease; }
+        #modal-remarcar-error-box.show { opacity: 1; max-height: 50px; padding-top: 10px; padding-bottom: 10px; margin-bottom: 20px; }
+
+        @media (max-width: 900px) {
+            .page-title-paciente { position: static; transform: none; margin: 20px 0; text-align: center; }
+            .header-top-row { flex-direction: column; align-items: center; }
+            .logo-section-paciente { align-items: center; }
+            .right-header-section { align-items: center; width: 100%; }
+            .new-navigation-area { width: 100%; justify-content: center; }
+        }
+        @media (max-width: 700px) { .appointments-grid-area-paciente { grid-template-columns: 1fr; } .remarcar-modal-content, .cancelar-consulta-modal-content { max-width: 90%; padding: 20px; } .form-row-modal { flex-direction: column; gap: 15px; margin-bottom: 20px; } .modal-internal-title { font-size: 20px; } .success-message, .success-message-cancel { font-size: 22px; } .modal-actions-cancelar { flex-direction: column; } .btn-nao-cancelar, .btn-sim-cancelar { width: 100%; } }
+        @media (max-width: 480px) { body { padding: 20px 15px; } .contact-info-paciente-main { font-size: 12px; } .modal-actions-remarcar { flex-direction: column; } .btn-modal { width: 100%; } .page-title-paciente { font-size: 22px; margin: 0 5px; } .logo-section-paciente img { width: 200px; } .header-top-row { margin-bottom: 10px; } .contact-info-row { margin-bottom: 20px; } }
+    </style>
+</head>
+
+<body>
+    <div class="page-content-area">
+        <div class="page-header-area">
+            <div class="header-top-row">
+                <div class="logo-section-paciente">
+                    <img src="../assets/icons/logo.png" alt="Logo Clinix">
+                </div>
+                
+                <h1 class="page-title-paciente">Agendamentos</h1>
+                
+                <div class="right-header-section">
+                    <div class="new-navigation-area">
+                        <a href="Notificacoes_Paciente.html" class="notification-bell-container">
+                            <img src="../assets/icons/notificacao.png" alt="Notificações" />
+                            <span class="notification-badge" id="notificationCount">0</span> 
+                        </a>
+
+                        <div class="menu-acessos-container">
+                            <div class="menu-acessos" id="mainMenuAcessos">
+                                <div class="menu-acessos-header">
+                                    Mais
+                                    <span class="arrow-down"></span>
+                                </div>
+                                <div class="menu-acessos-body">
+                                    <a href="Perfil_Paciente.html">Perfil</a>
+                                    <a href="Agendamento_Paciente.html">Agendar Consulta</a>
+                                    <a href="Login_Paciente.html">Sair</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-info-row">
+                <div class="contact-info-paciente-main" id="contatoClinicaAreaPaciente">
+                </div>
+            </div>
+        </div>
+
+        <div class="appointments-grid-area-paciente" id="cardsAgendamentosPaciente">
+        </div>
+    </div>
+
+    <div id="modalRemarcarContainer" class="modal-overlay">
+         <div class="modal-content remarcar-modal-content">
+            <h3 class="modal-internal-title">Alteração de Consulta</h3>
+            <div class="form-group-modal">
+                <label for="modalMedicoDisplay">MÉDICO</label>
+                <input type="text" id="modalMedicoDisplay" class="input-modal-text-display" readonly>
+            </div>
+            <div class="form-row-modal">
+                <div class="form-group-modal">
+                    <label for="modalDiaInput">DIA</label>
+                    <input type="date" id="modalDiaInput" class="input-modal">
+                </div>
+                <div class="form-group-modal">
+                    <label for="modalHoraInput">HORA</label>
+                    <input type="time" id="modalHoraInput" class="input-modal">
+                </div>
+            </div>
+            <div id="modal-remarcar-error-box"></div>
+            <div class="modal-actions-remarcar">
+                <button type="button" id="btnCancelarRemarcacao" class="btn-modal btn-cancelar-remarcar">Cancelar</button>
+                <button type="button" id="btnConfirmarRemarcacao" class="btn-modal btn-confirmar-remarcar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalSucessoContainer" class="modal-overlay">
+        <div class="modal-content success-modal-content">
+            <h3 class="modal-internal-title success-message">Consulta Alterada com Sucesso!</h3>
+            <div class="modal-actions-success">
+                <button type="button" id="btnConfirmarSucessoPopup" class="btn-modal btn-confirmar-success">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirmarCancelamento" class="modal-overlay">
+        <div class="modal-content cancelar-consulta-modal-content">
+            <h3 class="modal-internal-title">DESEJA CANCELAR SUA CONSULTA?</h3>
+            <div class="consulta-details-cancelamento">
+                <p><span class="label-modal-cancel">Especialidade:</span> <span id="cancelModalEspecialidade"></span></p>
+                <p><span class="label-modal-cancel">Médico:</span> <span id="cancelModalMedico"></span></p>
+                <p><span class="label-modal-cancel">Data e Hora:</span> <span id="cancelModalDataHora"></span></p>
+            </div>
+            <div class="modal-actions-cancelar">
+                <button type="button" id="btnModalNaoCancelar" class="btn-modal btn-nao-cancelar">Não</button>
+                <button type="button" id="btnModalSimCancelar" class="btn-modal btn-sim-cancelar">Sim</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalCancelamentoSucesso" class="modal-overlay">
+        <div class="modal-content cancelada-success-modal-content">
+            <h3 class="modal-internal-title success-message-cancel">CONSULTA CANCELADA</h3>
+            <div class="modal-actions-success">
+                <button type="button" id="btnModalContinuarCancelado" class="btn-modal btn-continuar-cancelado">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function atualizarContadorNotificacoes() {
+            const badge = document.getElementById('notificationCount');
+            if (!badge) return;
+
+            try {
+                const response = await fetch('../backend/contar_notificacoes.php');
+                const data = await response.json();
+                
+                if (data.success && data.count > 0) {
+                    badge.textContent = data.count;
+                    badge.style.display = 'flex'; 
+                } else {
+                    badge.style.display = 'none'; 
+                }
+            } catch (error) {
+                console.log("Erro ao buscar notificações, mantendo oculto.", error);
+                badge.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            atualizarContadorNotificacoes();
+        });
+
+        let editingAppointmentIndex = null; 
+        let cancelingAppointmentIndex = null; 
+        let agendamentosAtuais = []; 
+
+        function abrirModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if(modal) modal.classList.add('active');
+        }
+        function fecharModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if(modal) modal.classList.remove('active');
+        }
+
+        async function fetchAgendamentosDoBackend() {
+            try {
+                const response = await fetch('../backend/listar_agendamentos_paciente.php');
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({ message: 'Erro desconhecido do servidor.' }));
+                    throw new Error(errData.message || `Falha ao buscar agendamentos: ${response.statusText}`);
+                }
+                const data = await response.json();
+                if (data.success && Array.isArray(data.agendamentos)) {
+                    return data.agendamentos;
+                } else if (!data.success && data.message.includes('autenticado')) {
+                    alert('Sua sessão expirou. Redirecionando para login.');
+                    window.location.href = 'Login_Paciente.html'; 
+                    return []; 
+                } else {
+                    return []; 
+                }
+            } catch (error) {
+                console.error("Erro no fetchAgendamentosDoBackend:", error);
+                return []; 
+            }
+        }
+
+        async function renderizarAgendamentos() {
+            const container = document.getElementById('cardsAgendamentosPaciente');
+            if (!container) return;
+            container.innerHTML = '<p style="text-align:center; color: #555;">Carregando agendamentos...</p>';
+            try {
+                agendamentosAtuais = await fetchAgendamentosDoBackend();
+                container.innerHTML = '';
+                if (agendamentosAtuais.length === 0) {
+                     container.innerHTML = '<p style="text-align:center; color: #555; width:100%;">Nenhum agendamento ativo encontrado.</p>';
+                    return;
+                }
+                agendamentosAtuais.forEach((ag, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card-agendamento-paciente-ref';
+                    card.dataset.idConsulta = ag.id; 
+
+                    let cardInfoHtml = `
+                        <p><span class="label-ref">Especialidade:</span> <span class="value-ref">${ag.especialidade || 'Não informada'}</span></p>
+                        <p><span class="label-ref">Médico:</span> <span class="value-ref">${ag.nomeMedico || 'Não informado'}</span></p>
+                        <p><span class="label-ref">Data e Hora:</span> <span class="value-ref">${ag.dia || 'N/A'} - ${ag.hora || 'N/A'}</span></p>
+                        <span class="label-block">Levar documentação em mãos:</span><span class="value-block">Documento com foto e cartão do SUS.</span>
+                    `;
+
+                    if (ag.observacoes && ag.observacoes.trim() !== '') {
+                        cardInfoHtml += `<span class="label-block">Observações/Sintomas:</span><span class="value-block">${ag.observacoes}</span>`;
+                    }
+                    
+                    if (ag.orientacoesConsulta && ag.orientacoesConsulta.trim() !== '') {
+                        cardInfoHtml += `<span class="label-block">Orientações de consulta:</span><span class="value-block">${ag.orientacoesConsulta}</span>`;
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="card-info-paciente-ref">
+                            ${cardInfoHtml}
+                        </div>
+                        <div class="card-actions-paciente-ref">
+                            <div class="action-icon-paciente-ref-wrapper edit-icon-ref" data-index="${index}" title="Editar/Remarcar">
+                                <img src="../assets/icons/icon_editar.png" alt="Editar/Remarcar">
+                            </div>
+                            <div class="action-icon-paciente-ref-wrapper delete-icon-ref" data-index="${index}" title="Cancelar">
+                                 <img src="../assets/icons/icon_deletar.png" alt="Cancelar">
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Falha ao renderizar agendamentos na UI:", error);
+                container.innerHTML = '<p style="text-align:center; color: red;">Erro ao exibir agendamentos.</p>';
+            }
+        }
+
+        function abrirModalRemarcar(index) {
+            const errorBox = document.getElementById('modal-remarcar-error-box');
+            if(errorBox) {
+                errorBox.classList.remove('show');
+                errorBox.style.paddingLeft = "15px";
+                errorBox.style.paddingRight = "15px";
+            }
+            
+            editingAppointmentIndex = index;
+            const agendamento = agendamentosAtuais[index];
+            if (!agendamento) return;
+            
+            document.getElementById('modalMedicoDisplay').value = agendamento.nomeMedico || "Não informado";
+            const partesData = agendamento.dia.split('/');
+            document.getElementById('modalDiaInput').value = `${partesData[2]}-${partesData[1]}-${partesData[0]}`;
+            document.getElementById('modalHoraInput').value = agendamento.hora || "";
+            abrirModal('modalRemarcarContainer');
+        }
+        
+        function showModalError(message) {
+            const errorBox = document.getElementById('modal-remarcar-error-box');
+            if (!errorBox) return;
+            errorBox.textContent = message;
+            errorBox.classList.add('show');
+            setTimeout(() => {
+                errorBox.classList.remove('show');
+            }, 5000);
+        }
+
+        async function confirmarRemarcacao() {
+            const agendamento = agendamentosAtuais[editingAppointmentIndex];
+            if (!agendamento) return;
+            
+            const novoDia = document.getElementById('modalDiaInput').value;
+            const novaHora = document.getElementById('modalHoraInput').value;
+
+            try {
+                const response = await fetch('../backend/remarcar_consulta.php', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_consulta: agendamento.id, novo_dia: novoDia, nova_hora: novaHora })
+                });
+                const resultado = await response.json();
+                if (!response.ok) {
+                    throw new Error(resultado.message || 'Falha no servidor.');
+                }
+                
+                if (resultado.success) {
+                    fecharModal('modalRemarcarContainer');
+                    abrirModal('modalSucessoContainer');
+                } else {
+                    showModalError(resultado.message || 'Tente novamente.');
+                }
+            } catch (error) {
+                showModalError(error.message);
+            }
+        }
+
+        function abrirModalConfirmarCancelamento(index) { 
+            cancelingAppointmentIndex = index;
+            const agendamento = agendamentosAtuais[index]; 
+            if (!agendamento) return;
+            
+            document.getElementById('cancelModalEspecialidade').textContent = agendamento.especialidade || "Não informada";
+            document.getElementById('cancelModalMedico').textContent = agendamento.nomeMedico || "Não informado";
+            document.getElementById('cancelModalDataHora').textContent = `${agendamento.dia || 'N/A'} - ${agendamento.hora || 'N/A'}`;
+            abrirModal('modalConfirmarCancelamento');
+        }
+
+        async function processarCancelamentoAgendamento() {
+            const agendamento = agendamentosAtuais[cancelingAppointmentIndex];
+            if (!agendamento) return;
+            
+            try {
+                const response = await fetch('../backend/cancelar_consulta.php', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_consulta: agendamento.id })
+                });
+                const resultado = await response.json();
+                if (!response.ok) throw new Error(resultado.message || 'Falha no servidor.');
+                
+                if (resultado.success) {
+                    fecharModal('modalConfirmarCancelamento');
+                    abrirModal('modalCancelamentoSucesso');
+                } else {
+                    alert('Erro: ' + (resultado.message || 'Tente novamente.'));
+                }
+            } catch (error) {
+                alert("Erro ao comunicar com o servidor: " + error.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            await renderizarAgendamentos();
+
+            const contatoDiv = document.getElementById('contatoClinicaAreaPaciente');
+            fetch('../backend/obter_config.php')
+              .then(response => response.json())
+              .then(data => {
+                if (contatoDiv && data && data.contato) {
+                  contatoDiv.innerHTML = `Para mais informações telefone: <strong>${data.contato}</strong>`;
+                }
+              });
+
+            document.getElementById('btnCancelarRemarcacao')?.addEventListener('click', () => fecharModal('modalRemarcarContainer'));
+            document.getElementById('btnConfirmarRemarcacao')?.addEventListener('click', confirmarRemarcacao); 
+            document.getElementById('btnConfirmarSucessoPopup')?.addEventListener('click', () => {
+                fecharModal('modalSucessoContainer');
+                renderizarAgendamentos();
+            });
+
+            document.getElementById('btnModalNaoCancelar')?.addEventListener('click', () => fecharModal('modalConfirmarCancelamento'));
+            document.getElementById('btnModalSimCancelar')?.addEventListener('click', processarCancelamentoAgendamento); 
+            document.getElementById('btnModalContinuarCancelado')?.addEventListener('click', () => {
+                fecharModal('modalCancelamentoSucesso');
+                renderizarAgendamentos();
+            });
+
+            document.getElementById('cardsAgendamentosPaciente')?.addEventListener('click', function(event) {
+                const targetIconWrapper = event.target.closest('.action-icon-paciente-ref-wrapper');
+                if (!targetIconWrapper) return;
+                
+                const index = parseInt(targetIconWrapper.dataset.index, 10);
+                if (isNaN(index)) return;
+
+                if (targetIconWrapper.classList.contains('edit-icon-ref')) {
+                    abrirModalRemarcar(index);
+                } else if (targetIconWrapper.classList.contains('delete-icon-ref')) {
+                    abrirModalConfirmarCancelamento(index);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

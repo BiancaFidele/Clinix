@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperação de Senha - Clinix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clinix-primary-blue: #004aad;
+            --clinix-secondary-blue: #00b2ff;
+            --clinix-white-bg: #ffffff;
+            --clinix-light-gray-bg: #f8f9fa; 
+            --clinix-text-dark: #333333;
+            --clinix-text-medium: #555555;
+            --font-family-base: 'Inter', sans-serif;
+            --border-radius-button: 30px;
+            --border-radius-fields: 30px;
+            --clinix-danger-red: #dc3545;
+            --clinix-danger-red-light: #f8d7da;
+            --clinix-danger-red-dark: #721c24;
+            --clinix-success-green: #28a745;
+            --clinix-success-green-light: #d4edda;
+            --clinix-success-green-dark: #155724;
+            
+            --readonly-bg-color: rgba(0, 178, 255, 0.1); 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--clinix-light-gray-bg);
+            margin: 0;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container-recuperacao {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .logo-recuperacao {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-recuperacao img {
+            width: 280px; /* Mesmo tamanho do perfil/cadastro */
+            margin-bottom: 20px;
+        }
+
+        /* Título Principal */
+        .titulo-pagina {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--clinix-text-dark);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* --- CONTAINER DO FORMULÁRIO (FUNDO TRANSPARENTE IGUAL PERFIL) --- */
+        .form-content-wrapper {
+            position: relative;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        .subtitulo-secao {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--clinix-primary-blue);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        /* --- RADIO BUTTONS CUSTOMIZADOS (IGUAL PERFIL) --- */
+        .metodo-escolha-senha { display: flex; justify-content: center; gap: 60px; margin-bottom: 40px; }
+        
+        .custom-radio input[type="radio"] { display: none; }
+        
+        .custom-radio {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        .radio-indicator {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--clinix-secondary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-radio input[type="radio"]:checked + .radio-indicator {
+            background-color: var(--clinix-secondary-blue);
+        }
+
+        /* --- COLUNAS LADO A LADO COM DIVISOR --- */
+        .senha-reset-columns { display: flex; gap: 50px; align-items: flex-start; position: relative; }
+        .senha-reset-column { flex: 1; display: flex; flex-direction: column; align-items: center; }
+        
+        .senha-column-title { font-size: 20px; font-weight: 700; color: var(--clinix-primary-blue); margin-bottom: 25px; text-align: center; }
+        
+        .vertical-divider-senha { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background-color: #e0e0e0; transform: translateX(-50%); }
+
+        .form-group-senha { width: 100%; margin-bottom: 25px; text-align: left; }
+        .form-group-senha label { display: block; font-size: 13px; font-weight: 600; color: var(--clinix-text-medium); margin-bottom: 8px; text-transform: uppercase; }
+        
+        .input-senha { 
+            width: 100%; padding: 12px 18px; border: 2px solid var(--clinix-secondary-blue);
+            border-radius: var(--border-radius-fields); box-sizing: border-box; font-size: 16px;
+            color: var(--clinix-text-dark); background-color: var(--clinix-white-bg); outline: none;
+            text-align: center;
+        }
+        .input-senha[readonly], .input-senha:disabled { 
+            background-color: var(--readonly-bg-color); cursor: not-allowed; color: #555; 
+        }
+        
+        /* Botões */
+        .action-button-senha {
+            background-color: var(--clinix-primary-blue); color: white;
+            padding: 12px; border: none; border-radius: var(--border-radius-button); 
+            font-size: 16px; font-weight: 700; cursor: pointer; 
+            transition: all 0.2s ease; width: auto; min-width: 180px; margin-top: 5px;
+            text-transform: none;
+        }
+        .action-button-senha:hover { background-color: #003a8c; transform: translateY(-2px); }
+        .action-button-senha:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; }
+        .action-button-senha.success { background-color: var(--clinix-success-green) !important; border-color: var(--clinix-success-green) !important; }
+
+        .btn-confirmar-senha {
+            background-color: var(--clinix-primary-blue); color: white;
+            padding: 12px 50px; border: none; border-radius: var(--border-radius-button);
+            font-size: 18px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s ease; margin-top: 20px;
+        }
+        .btn-confirmar-senha:hover { background-color: #003a8c; transform: translateY(-2px); }
+        .btn-confirmar-senha:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; }
+
+        /* Feedback Inline */
+        .feedback-message-inline {
+            color: var(--clinix-success-green);
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Caixa de Mensagem Flutuante (Erro/Sucesso geral) */
+        #message-box {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            padding: 10px 20px; border-radius: 8px; font-size: 14px;
+            font-weight: 500; z-index: 101; opacity: 0; visibility: hidden;
+            transition: all 0.4s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            min-width: 300px; text-align: center;
+        }
+        #message-box.success { background-color: var(--clinix-success-green-light); color: var(--clinix-success-green-dark); border: 1px solid var(--clinix-success-green); }
+        #message-box.error { background-color: var(--clinix-danger-red-light); color: var(--clinix-danger-red-dark); border: 1px solid var(--clinix-danger-red); }
+        #message-box.show { top: 40px; opacity: 1; visibility: visible; }
+
+        /* Tela de Sucesso Final */
+        .success-container {
+            display: none;
+            text-align: center;
+            padding: 50px;
+        }
+        .success-container.active { display: block; }
+        .success-title { font-size: 28px; color: var(--clinix-text-dark); margin-bottom: 30px; font-weight: 700; }
+
+        .rodape-recuperacao {
+            text-align: center;
+            font-size: 13px;
+            color: var(--clinix-text-medium);
+            margin-top: 50px;
+        }
+        .rodape-recuperacao strong { font-weight: 600; }
+
+        @media (max-width: 900px) {
+            .senha-reset-columns { flex-direction: column; gap: 40px; }
+            .vertical-divider-senha { display: none; }
+            .senha-reset-column { width: 100%; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0; }
+            .senha-reset-column:last-child { border-bottom: none; }
+            .btn-confirmar-senha { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+  <div class="container-recuperacao">
+    <div class="logo-recuperacao">
+      <img src="../assets/icons/logo.png" alt="Clinix Logo" />
+    </div>
+    
+    <h1 class="titulo-pagina">Recuperação de Senha</h1>
+    
+    <div id="message-box"></div>
+
+    <div id="form-content-area" class="form-content-wrapper">
+        <h2 class="subtitulo-secao">ESCOLHA O MÉTODO PARA REDEFINIR A SENHA</h2>
+        
+        <div class="metodo-escolha-senha">
+            <label class="custom-radio">
+                <input type="radio" name="metodo" value="email" checked>
+                <div class="radio-indicator"></div>
+                E-MAIL
+            </label>
+            <label class="custom-radio">
+                <input type="radio" name="metodo" value="sms">
+                <div class="radio-indicator"></div>
+                SMS (TELEFONE)
+            </label>
+        </div>
+
+        <div class="senha-reset-columns">
+            <div class="vertical-divider-senha"></div>
+
+            <div class="senha-reset-column">
+                <h4 class="senha-column-title">1 - Autenticação</h4>
+                <div class="form-group-senha">
+                    <label for="contatoRec" id="contatoLabel">INSIRA O E-MAIL CADASTRADO</label>
+                    <input type="email" id="contatoRec" class="input-senha" placeholder="seuemail@dominio.com" />
+                    <div id="feedbackEnvioCodigo" class="feedback-message-inline">Código enviado com sucesso!</div>
+                </div>
+                <button type="button" class="action-button-senha" id="btnEnviarCodigoRec">Enviar Código</button>
+                
+                <div class="form-group-senha" style="margin-top: 30px;">
+                    <label for="codigoVerificacaoRec">INSIRA O CÓDIGO RECEBIDO</label>
+                    <input type="text" id="codigoVerificacaoRec" class="input-senha" maxlength="6" />
+                </div>
+                <button type="button" class="action-button-senha" id="btnVerificarCodigoRec">Verificar Código</button>
+            </div>
+            
+            <div class="senha-reset-column">
+                <h4 class="senha-column-title">2 - Nova Senha</h4>
+                <div class="form-group-senha">
+                    <label for="novaSenhaRec">DIGITE A NOVA SENHA</label>
+                    <input type="password" id="novaSenhaRec" class="input-senha" disabled />
+                </div>
+                <div class="form-group-senha">
+                    <label for="confirmarNovaSenhaRec">CONFIRME A SENHA</label>
+                    <input type="password" id="confirmarNovaSenhaRec" class="input-senha" disabled />
+                </div>
+                <button type="button" class="btn-confirmar-senha" id="btnConfirmarNovaSenhaRec" disabled>Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-content-area" class="success-container">
+      <h3 class="success-title">Senha Alterada com Sucesso!</h3>
+      <button class="btn-confirmar-senha" onclick="window.location.href='Login_Paciente.html'">Ir para o Login</button>
+    </div>
+
+    <div class="rodape-recuperacao" id="rodape-contato">
+      </div>
+  </div>
+
+  <script>
+    // --- MÁSCARAS (Mesmas do Perfil) ---
+    function formatarTelefone(tel) { 
+        tel = tel.replace(/\D/g, '');
+        if (tel.length > 10) return tel.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+        return tel.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const radiosMetodo = document.querySelectorAll('input[name="metodo"]');
+        const contatoLabel = document.getElementById('contatoLabel');
+        const contatoInput = document.getElementById('contatoRec');
+        
+        const btnEnviarCodigo = document.getElementById('btnEnviarCodigoRec');
+        const feedbackMsg = document.getElementById('feedbackEnvioCodigo');
+        const codigoInput = document.getElementById('codigoVerificacaoRec');
+        const btnVerificarCodigo = document.getElementById('btnVerificarCodigoRec');
+        
+        const novaSenhaInput = document.getElementById('novaSenhaRec');
+        const confirmarSenhaInput = document.getElementById('confirmarNovaSenhaRec');
+        const btnConfirmarNovaSenha = document.getElementById('btnConfirmarNovaSenhaRec');
+
+        const formContentArea = document.getElementById('form-content-area');
+        const successContentArea = document.getElementById('success-content-area');
+        const messageBox = document.getElementById('message-box');
+        
+        let contatoParaRecuperacao = '';
+
+        // Máscara no input de contato se for telefone
+        contatoInput.addEventListener('input', function() {
+             const metodo = document.querySelector('input[name="metodo"]:checked').value;
+             if (metodo === 'sms') {
+                 this.value = formatarTelefone(this.value);
+             }
+        });
+
+        function showMessage(message, type = 'success') {
+            messageBox.textContent = message;
+            messageBox.className = ''; // Limpa classes anteriores
+            messageBox.classList.add(type, 'show');
+            setTimeout(() => { messageBox.classList.remove('show'); }, 4000);
+        }
+
+        function atualizarFormularioAutenticacao() {
+            const metodo = document.querySelector('input[name="metodo"]:checked').value;
+            contatoInput.value = '';
+            if (metodo === 'email') {
+                contatoLabel.textContent = 'INSIRA O E-MAIL CADASTRADO';
+                contatoInput.type = 'email';
+                contatoInput.placeholder = 'seuemail@dominio.com';
+            } else {
+                contatoLabel.textContent = 'INSIRA O NÚMERO DE TELEFONE CADASTRADO';
+                contatoInput.type = 'tel';
+                contatoInput.placeholder = '(XX) XXXXX-XXXX';
+            }
+        }
+
+        radiosMetodo.forEach(radio => {
+            radio.addEventListener('change', atualizarFormularioAutenticacao);
+        });
+
+        // 1. ENVIAR CÓDIGO
+        btnEnviarCodigo.addEventListener('click', async function() {
+            if (!contatoInput.value) {
+                showMessage('Por favor, preencha o campo de contato.', 'error');
+                return;
+            }
+            contatoParaRecuperacao = contatoInput.value;
+            
+            const originalText = this.textContent;
+            this.disabled = true;
+            this.textContent = 'Enviando...';
+            
+            try {
+                const response = await fetch('../backend/solicitar_codigo_recuperacao.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metodo: document.querySelector('input[name="metodo"]:checked').value, contato: contatoParaRecuperacao })
+                });
+                const data = await response.json();
+                
+                if(data.success) {
+                    // Feedback Inline (Verde)
+                    feedbackMsg.style.display = 'block';
+                    this.classList.add('success');
+                    this.textContent = 'Enviado!';
+                    codigoInput.focus();
+                    
+                    // Volta o botão ao normal após 3s
+                    setTimeout(() => {
+                        feedbackMsg.style.display = 'none';
+                        this.classList.remove('success');
+                        this.textContent = originalText;
+                        this.disabled = false; 
+                    }, 3000);
+                    // Não habilita o botão imediatamente, espera o timeout
+                    return; 
+                } else {
+                    showMessage(data.message, 'error');
+                }
+
+            } catch (error) {
+                showMessage('Erro de comunicação. Tente novamente.', 'error');
+            }
+            
+            // Só executa se der erro
+            this.disabled = false;
+            this.textContent = originalText;
+        });
+
+        // 2. VERIFICAR CÓDIGO
+        btnVerificarCodigo.addEventListener('click', async function() {
+            const codigo = codigoInput.value;
+            if (!codigo || codigo.length !== 6) {
+                showMessage('Por favor, insira o código de 6 dígitos.', 'error');
+                return;
+            }
+
+            this.disabled = true;
+            this.textContent = 'Verificando...';
+
+            try {
+                const response = await fetch('../backend/verificar_codigo_recuperacao.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contato: contatoParaRecuperacao, codigo: codigo })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showMessage('Código verificado com sucesso!', 'success');
+                    
+                    // Libera a coluna 2
+                    novaSenhaInput.disabled = false;
+                    confirmarSenhaInput.disabled = false;
+                    btnConfirmarNovaSenha.disabled = false;
+                    novaSenhaInput.focus();
+
+                    // Trava a coluna 1
+                    btnEnviarCodigo.disabled = true;
+                    contatoInput.readOnly = true; // Readonly é melhor visualmente que disabled aqui
+                    codigoInput.readOnly = true;
+                    this.textContent = 'Verificado!';
+                    this.classList.add('success');
+
+                } else {
+                    showMessage(data.message, 'error');
+                    this.disabled = false;
+                    this.textContent = 'Verificar Código';
+                }
+            } catch (error) {
+                showMessage('Erro ao verificar o código.', 'error');
+                this.disabled = false;
+                this.textContent = 'Verificar Código';
+            }
+        });
+
+        // 3. CONFIRMAR SENHA
+        btnConfirmarNovaSenha.addEventListener('click', async function() {
+            if (novaSenhaInput.value.length < 6) {
+                showMessage('A nova senha deve ter pelo menos 6 caracteres.', 'error');
+                return;
+            }
+            if (novaSenhaInput.value !== confirmarSenhaInput.value) {
+                showMessage('As senhas não coincidem.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('../backend/redefinir_senha_final.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nova_senha_original: novaSenhaInput.value })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    formContentArea.style.display = 'none';
+                    successContentArea.classList.add('active');
+                    // Esconde o título principal para limpar a tela
+                    document.querySelector('.titulo-pagina').style.display = 'none'; 
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Erro ao redefinir a senha.', 'error');
+            }
+        });
+        
+        const rodapeContatoDiv = document.getElementById('rodape-contato');
+        fetch('../backend/obter_config.php')
+          .then(response => response.json())
+          .then(data => {
+            if (rodapeContatoDiv && data && data.contato) {
+              rodapeContatoDiv.innerHTML = `Para mais informações telefone: <strong>${data.contato}</strong>`;
+            }
+          });
+
+        atualizarFormularioAutenticacao();
+    });
+  </script>
+</body>
+</html>

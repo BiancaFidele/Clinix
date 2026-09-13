@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações - Clinix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clinix-primary-blue: #004aad;
+            --clinix-secondary-blue: #00b2ff;
+            --clinix-text-dark: #333333;
+            --clinix-text-medium: #555555;
+            --clinix-white-bg: #ffffff;
+            --clinix-light-gray-bg: #f8f9fa; 
+            --border-radius-button: 20px;
+            --notification-border-color: #00b2ff; 
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--clinix-light-gray-bg); 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .page-container-notificacoes {
+            width: 100%;
+            max-width: 1100px; 
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        .header-area-inner-notificacoes {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0px; 
+            margin-bottom: 15px;
+        }
+
+        .logo-section-notificacoes img {
+            height: 75px; 
+        }
+        
+        .navigation-buttons-section-notificacoes {
+            display: flex;
+            flex-direction: column; 
+            gap: 8px;
+        }
+
+        .nav-button-notificacoes {
+            background-color: var(--clinix-primary-blue);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-button);
+            padding: 9px 22px; 
+            cursor: pointer;
+            font-size: 14px; 
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.2s ease-in-out;
+            min-width: 120px; 
+        }
+        .nav-button-notificacoes:hover {
+            background-color: var(--clinix-secondary-blue);
+            color: var(--clinix-primary-blue);
+        }
+        
+        .contact-info-notificacoes { 
+             font-size: 13px;
+             color: var(--clinix-text-medium);
+             text-align: center;
+             margin-top: 0px;
+             margin-bottom: 20px; 
+             width: 100%;
+        }
+
+        .main-title-notificacoes { 
+            font-size: 30px; 
+            font-weight: 700;
+            color: var(--clinix-text-dark);
+            margin-top: 0px;
+            margin-bottom: 5px; 
+            text-align: center;
+            width: 100%;
+        }
+
+        .notifications-list-container {
+            width: 100%;
+            max-width: 900px; 
+            display: flex;
+            flex-direction: column;
+            gap: 20px; 
+        }
+
+        .notification-card {
+            background-color: var(--clinix-white-bg);
+            border: 2px solid var(--notification-border-color);
+            border-radius: 15px; 
+            padding: 20px 25px; 
+            display: flex; 
+            justify-content: space-between;
+            align-items: flex-start; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+        }
+
+        .notification-details {
+            flex-basis: 48%; 
+            padding-right: 20px;
+            font-size: 14px;
+            color: var(--clinix-text-dark);
+        }
+        .notification-details p {
+            margin: 0 0 10px 0; 
+            line-height: 1.6;
+        }
+        .notification-details strong {
+            font-weight: 600;
+            color: var(--clinix-text-dark); 
+        }
+
+        .notification-reason {
+            flex-basis: 48%; 
+            padding-left: 20px;
+            font-size: 14px;
+            color: var(--clinix-text-medium);
+            border-left: 1.5px solid #e0e0e0; 
+            min-height: 80px; 
+            display: flex; 
+            flex-direction: column; 
+        }
+         .notification-reason strong { 
+            font-weight: 700; 
+            color: var(--clinix-primary-blue); 
+            display: block;
+            margin-bottom: 6px; 
+            font-size: 15px; 
+        }
+        .notification-reason span { 
+            line-height: 1.6;
+        }
+
+
+        .action-button-container-notificacoes {
+            width: 100%;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 20px; 
+        }
+
+        .btn-voltar-notificacoes {
+            background-color: var(--clinix-primary-blue);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-button);
+            padding: 12px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-voltar-notificacoes:hover {
+            background-color: var(--clinix-secondary-blue);
+            color: var(--clinix-primary-blue);
+        }
+        
+        .no-notifications {
+            text-align:center; 
+            color: var(--clinix-text-medium); 
+            width:100%; font-size: 16px; 
+            padding: 40px 0;
+            background-color: var(--clinix-white-bg);
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 992px) {
+            .header-area-inner-notificacoes {
+                flex-direction: column;
+                gap: 20px; 
+                align-items: center;
+                padding-bottom: 20px; 
+            }
+            .navigation-buttons-section-notificacoes { 
+                flex-direction: row; 
+                justify-content: center; 
+                width: 100%;
+            }
+             .logo-section-notificacoes {
+                order: -1; 
+                margin-bottom: 10px;
+            }
+        }
+        @media (max-width: 768px) {
+            .notification-card {
+                flex-direction: column; 
+                align-items: stretch;
+            }
+            .notification-details {
+                padding-right: 0;
+                margin-bottom: 15px;
+                flex-basis: auto;
+            }
+            .notification-reason {
+                padding-left: 0;
+                border-left: none;
+                border-top: 1.5px solid #e0e0e0; 
+                padding-top: 15px;
+                min-height: auto;
+                flex-basis: auto;
+            }
+            .main-title-notificacoes { font-size: 28px; }
+        }
+        @media (max-width: 480px) {
+            .navigation-buttons-section-notificacoes {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .nav-button-notificacoes { width: 100%; box-sizing: border-box; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="page-container-notificacoes">
+        <header class="header-area-inner-notificacoes">
+            <div class="logo-section-notificacoes">
+                <img src="../assets/icons/logo.png" alt="Logo Clinix"> 
+            </div>
+            <div class="navigation-buttons-section-notificacoes">
+                <a href="Notificacoes_Paciente.html" class="nav-button-notificacoes">Notificações</a>
+                <a href="Perfil_Paciente.html" class="nav-button-notificacoes">Perfil</a> 
+                <a href="Login_Paciente.html" class="nav-button-notificacoes">Sair</a> 
+            </div>
+        </header>
+    
+        <h1 class="main-title-notificacoes">Notificações</h1>
+        <!-- --- INÍCIO DA CORREÇÃO --- -->
+        <div class="contact-info-notificacoes" id="contatoClinicaNotificacoes">
+            <!-- O conteúdo será preenchido pelo JavaScript -->
+        </div>
+        <!-- --- FIM DA CORREÇÃO --- -->
+
+        <div class="notifications-list-container" id="notificationsList">
+            <p class="no-notifications">Carregando notificações...</p>
+        </div>
+
+        <div class="action-button-container-notificacoes">
+            <a href="Area_Paciente.html" class="btn-voltar-notificacoes">Voltar</a>
+        </div>
+    </div>
+
+    <script>
+        async function fetchNotificacoesFromDB() {
+            try {
+                const response = await fetch('../backend/paciente_carregar_notificacoes.php');
+                if (!response.ok) {
+                    let errorMessage = 'Falha ao buscar notificações do servidor.';
+                    try {
+                        const errData = await response.json();
+                        errorMessage = errData.message || `Erro ${response.status}: ${response.statusText}`;
+                    } catch (jsonError) {
+                        const textError = await response.text();
+                        errorMessage = `Erro ${response.status}: ${textError || response.statusText}`;
+                    }
+                    throw new Error(errorMessage);
+                }
+                const data = await response.json();
+                if (data.success && Array.isArray(data.notificacoes)) {
+                    return data.notificacoes;
+                } else if (!data.success && data.message === 'Paciente não autenticado.') {
+                    alert('Sua sessão expirou ou você não está logado. Redirecionando para login.');
+                    window.location.href = 'Login_Paciente.html'; 
+                    return []; 
+                } else {
+                    return []; 
+                }
+            } catch (error) {
+                console.error("Erro no fetchNotificacoesFromDB:", error);
+                return []; 
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const notificationsListContainer = document.getElementById('notificationsList');
+            if (!notificationsListContainer) {
+                return;
+            }
+
+            // --- INÍCIO DA CORREÇÃO ---
+            // Buscar e preencher dinamicamente as informações de contato
+            const contatoDiv = document.getElementById('contatoClinicaNotificacoes');
+            if (contatoDiv) {
+                fetch('../backend/obter_config.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.contato) {
+                            contatoDiv.innerHTML = `Para mais informações telefone: <strong>${data.contato}</strong>`;
+                        } else {
+                            contatoDiv.innerHTML = 'Contato não disponível.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar informações de contato:', error);
+                        contatoDiv.innerHTML = 'Erro ao carregar contato.';
+                    });
+            }
+            // --- FIM DA CORREÇÃO ---
+
+            try {
+                const notificacoes = await fetchNotificacoesFromDB(); 
+
+                if (!Array.isArray(notificacoes) || notificacoes.length === 0) {
+                    notificationsListContainer.innerHTML = '<p class="no-notifications">Nenhuma notificação encontrada.</p>';
+                    return;
+                }
+
+                notificationsListContainer.innerHTML = ''; 
+
+                notificacoes.forEach(notif => {
+                    if (!notif) { 
+                        return; 
+                    }
+
+                    const notifCard = document.createElement('div');
+                    notifCard.className = 'notification-card';
+                    
+                    let detalhesConsultaHtml = `
+                        <p><strong>Especialidade:</strong> ${notif.especialidade_consulta || 'N/A'}</p>
+                        <p><strong>Médico:</strong> ${notif.medico_consulta || 'N/A'}</p>
+                        <p><strong>Data e Hora:</strong> ${notif.data_hora_consulta || 'N/A'}</p>
+                    `;
+                    if (notif.especialidade_consulta === 'Não aplicável' && notif.medico_consulta === 'Não aplicável' && notif.data_hora_consulta === 'Não aplicável') {
+                        detalhesConsultaHtml = '<p>Esta notificação não está vinculada a uma consulta específica.</p>';
+                    }
+
+                    let razaoHtml = `
+                        <strong>${notif.texto_principal_razao || 'Informação da Clínica:'}</strong>
+                        <span>${notif.motivo_especifico || 'Detalhes não fornecidos.'}</span>
+                    `;
+                    
+                    notifCard.innerHTML = `
+                        <div class="notification-details">
+                            ${detalhesConsultaHtml}
+                        </div>
+                        <div class="notification-reason">
+                            ${razaoHtml}
+                        </div>
+                    `;
+                    notificationsListContainer.appendChild(notifCard);
+                });
+
+            } catch (error) {
+                console.error("Falha ao carregar ou renderizar notificações:", error);
+                notificationsListContainer.innerHTML = '<p class="no-notifications" style="color:red;">Erro ao carregar notificações. Tente novamente mais tarde.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

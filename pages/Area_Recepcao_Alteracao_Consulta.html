@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alteração de Consulta - Recepção Clinix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clinix-primary-blue: #004aad;
+            --clinix-secondary-blue: #00b2ff;
+            --clinix-text-dark: #333333;
+            --clinix-text-medium: #555555;
+            --clinix-input-border: #00b2ff;
+            --clinix-input-bg-readonly: #e9ecef;
+            --clinix-button-cancel-bg: #dc3545;
+            --clinix-button-cancel-hover-bg: #c82333;
+            --border-radius-button: 20px;
+            --border-radius-input: 30px;
+            --font-family-base: 'Inter', sans-serif;
+        }
+        body {
+            font-family: var(--font-family-base);
+            background-color: #fff; 
+            margin: 0;
+            padding: 20px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .page-container-alteracao {
+            width: 100%;
+            max-width: 900px; 
+            margin: 0 auto;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        .top-bar-alteracao {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            width: 100%; 
+        }
+        .logo-alteracao img { height: 60px; }
+        .user-info-alteracao { text-align: right; font-size: 14px; }
+        .user-info-alteracao strong { color: var(--clinix-primary-blue); font-weight: 600; display: block; margin-bottom: 2px; }
+        .user-info-alteracao span { color: var(--clinix-text-dark); font-weight: 500; }
+        .btn-sair-alteracao { background-color: var(--clinix-primary-blue); color: white; border-radius: 15px; padding: 6px 18px; border: none; text-decoration: none; font-size: 13px; font-weight: 500; margin-top: 5px; display: inline-block; transition: background-color 0.2s ease; }
+        .btn-sair-alteracao:hover { background-color: #003a8c; }
+        .main-title-alteracao { text-align: center; font-size: 32px; font-weight: 700; color: var(--clinix-text-dark); margin-bottom: 40px; width: 100%; }
+        
+        .form-alteracao-consulta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+        }
+        .form-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+        .form-group-alteracao {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 320px;
+        }
+        .form-group-alteracao.full-width {
+            max-width: 100%;
+        }
+        .form-group-alteracao label { 
+            font-weight: 600; 
+            font-size: 14px; 
+            color: var(--clinix-text-medium);
+            margin-bottom: 8px;
+            align-self: flex-start;
+        }
+        .input-display-alteracao, .input-editable-alteracao, .textarea-alteracao { 
+            border: 2px solid var(--clinix-input-border); 
+            border-radius: var(--border-radius-input); 
+            padding: 12px 20px; 
+            width: 100%; 
+            text-align: center; 
+            box-sizing: border-box; 
+            font-size: 15px; 
+            font-family: 'Inter', sans-serif; 
+        }
+        .input-display-alteracao { 
+            background-color: var(--clinix-input-bg-readonly); 
+            color: var(--clinix-text-dark); 
+            font-weight: 500; 
+            cursor: default;
+            border-color: #ccc;
+        }
+        
+        /* --- INÍCIO DA CORREÇÃO DE ESTILO --- */
+        .input-editable-alteracao { 
+            background-color: #ffffff; /* Fundo branco */
+            color: var(--clinix-text-dark); /* Texto escuro */
+            font-weight: 500; /* Peso da fonte normal */
+        }
+        input[type="date"].input-editable-alteracao::-webkit-calendar-picker-indicator, 
+        input[type="time"].input-editable-alteracao::-webkit-calendar-picker-indicator { 
+            cursor: pointer;
+            filter: invert(50%) sepia(100%) saturate(1000%) hue-rotate(180deg); /* Ícone azulado */
+        }
+        /* --- FIM DA CORREÇÃO DE ESTILO --- */
+
+        .textarea-alteracao { 
+            min-height: 120px; 
+            text-align: left; 
+            resize: vertical; 
+        }
+        .form-buttons-alteracao { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-top: 25px; 
+            width: 100%; 
+            max-width: 450px;
+        }
+        .btn-form-alteracao { 
+            padding: 12px 0; 
+            border: none; 
+            border-radius: var(--border-radius-button); 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            flex: 1;
+            transition: background-color 0.2s ease, transform 0.1s ease; 
+        }
+
+        .btn-form-alteracao.cancelar { background-color: var(--clinix-button-cancel-bg); color: white; }
+        .btn-form-alteracao.cancelar:hover { background-color: var(--clinix-button-cancel-hover-bg); }
+        .btn-form-alteracao.confirmar { background-color: var(--clinix-primary-blue); color: white; }
+        .btn-form-alteracao.confirmar:hover { background-color: #003a8c; }
+
+        .modal-recepcao-alteracao { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; }
+        .modal-content-recepcao-alteracao { background-color: white; padding: 30px 40px; border-radius: 12px; text-align: center; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25); width: 90%; max-width: 480px; border-top: 5px solid var(--clinix-secondary-blue); }
+        .modal-content-recepcao-alteracao h2 { margin-top: 0; margin-bottom: 20px; font-size: 22px; font-weight: 700; color: var(--clinix-text-dark); }
+        #modalMessageAlteracao { font-size: 15px; color: var(--clinix-text-medium); line-height: 1.6; margin-bottom: 25px; }
+        .modal-content-recepcao-alteracao .btn-confirmar-modal { background-color: var(--clinix-primary-blue); color: white; border: none; border-radius: var(--border-radius-button); padding: 12px 40px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; display: inline-block; transition: background-color 0.2s ease; }
+        .modal-content-recepcao-alteracao .btn-confirmar-modal:hover { background-color: #003a8c; }
+
+        @media (max-width: 768px) {
+            .top-bar-alteracao { flex-direction: column; gap: 15px; }
+            .user-info-alteracao { text-align: center; }
+            .main-title-alteracao { font-size: 28px; margin-bottom: 30px; }
+            .form-row { flex-direction: column; align-items: center; }
+            .form-group-alteracao { width: 100%; max-width: 400px; }
+            .form-buttons-alteracao { flex-direction: column; max-width: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container-alteracao">
+        <div class="top-bar-alteracao">
+            <div class="logo-alteracao">
+                <img src="../assets/icons/logo.png" alt="Logo Clinix">
+            </div>
+            <div class="user-info-alteracao">
+                <strong>CONECTADO(A) COMO:</strong>
+                <span id="nomeUsuarioAlteracao">CARREGANDO...</span><br>
+                <button class="btn-sair-alteracao" id="btnSairAlteracao">Sair</button>
+            </div>
+        </div>
+
+        <h1 class="main-title-alteracao">Alteração de Consulta</h1>
+
+        <form id="formAlterarConsultaRecepcao" class="form-alteracao-consulta">
+            <div class="form-row">
+                <div class="form-group-alteracao">
+                    <label for="pacienteDisplayAlteracao">PACIENTE</label>
+                    <input type="text" id="pacienteDisplayAlteracao" class="input-display-alteracao" readonly>
+                </div>
+                <div class="form-group-alteracao">
+                    <label for="medicoDisplayAlteracao">MÉDICO</label>
+                    <input type="text" id="medicoDisplayAlteracao" class="input-display-alteracao" readonly>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group-alteracao">
+                    <label for="diaAlteracao">DIA</label>
+                    <input type="date" id="diaAlteracao" name="novo_dia" class="input-editable-alteracao" required>
+                </div>
+                <div class="form-group-alteracao">
+                    <label for="horaAlteracao">HORA</label>
+                    <input type="time" id="horaAlteracao" name="nova_hora" class="input-editable-alteracao" required>
+                </div>
+            </div>
+             <div class="form-row">
+                <div class="form-group-alteracao full-width">
+                    <label for="motivoAlteracao">INFORME O MOTIVO DA ALTERAÇÃO PARA O PACIENTE:</label>
+                    <textarea id="motivoAlteracao" name="motivo_remarcacao" class="textarea-alteracao" required></textarea>
+                </div>
+            </div>
+            <input type="hidden" id="consultaIdHidden" name="id_consulta">
+            <div class="form-buttons-alteracao">
+                <button type="button" id="btnCancelarAlteracaoForm" class="btn-form-alteracao cancelar">Cancelar</button>
+                <button type="submit" id="btnConfirmarAlteracaoForm" class="btn-form-alteracao confirmar">Confirmar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-recepcao-alteracao" id="modalConfirmacaoAlteracao">
+      <div class="modal-content-recepcao-alteracao">
+        <h2 id="modalTitleAlteracao">Processo Concluído</h2>
+        <p id="modalMessageAlteracao">A consulta foi alterada com sucesso.</p>
+        <button class="btn-confirmar-modal" id="btnConfirmarRedirecionamentoModalAlteracao">OK</button> 
+      </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        const consultaId = new URLSearchParams(window.location.search).get('consultaId');
+        const formAlterar = document.getElementById('formAlterarConsultaRecepcao');
+        
+        const modal = document.getElementById('modalConfirmacaoAlteracao');
+        const modalTitle = document.getElementById('modalTitleAlteracao');
+        const modalMessage = document.getElementById('modalMessageAlteracao');
+        const btnConfirmarModal = document.getElementById('btnConfirmarRedirecionamentoModalAlteracao');
+
+        const nomeUsuarioDisplay = document.getElementById('nomeUsuarioAlteracao');
+        const pacienteDisplay = document.getElementById('pacienteDisplayAlteracao');
+        const medicoDisplay = document.getElementById('medicoDisplayAlteracao');
+        const diaInput = document.getElementById('diaAlteracao');
+        const horaInput = document.getElementById('horaAlteracao');
+        const consultaIdHiddenInput = document.getElementById('consultaIdHidden');
+
+        const nomeSalvo = sessionStorage.getItem('recepcionista_nome_sessao');
+        if (nomeUsuarioDisplay) nomeUsuarioDisplay.textContent = nomeSalvo || 'Recepcionista';
+
+        const btnSair = document.getElementById('btnSairAlteracao');
+        if (btnSair) {
+            btnSair.addEventListener('click', () => {
+                window.location.href = 'Login_Recepcao.html';
+            });
+        }
+
+        const btnCancelarForm = document.getElementById('btnCancelarAlteracaoForm');
+        if (btnCancelarForm) {
+            btnCancelarForm.addEventListener('click', () => {
+                window.location.href = 'Area_Recepcao_Consultas.html';
+            });
+        }
+
+        if (!consultaId) {
+            alert('ID da consulta não fornecido.');
+            window.location.href = 'Area_Recepcao_Consultas.html';
+            return;
+        }
+        if (consultaIdHiddenInput) consultaIdHiddenInput.value = consultaId;
+
+        // Carrega os dados atuais da consulta
+        try {
+            const response = await fetch(`../backend/recepcao_carregar_detalhes_consulta.php?consultaId=${consultaId}`);
+            const data = await response.json();
+            if (data.success && data.consulta) {
+                const c = data.consulta;
+                pacienteDisplay.value = c.nome_paciente || 'Não informado';
+                medicoDisplay.value = `${c.nome_medico || 'N/A'} - ${c.nome_especialidade || 'N/A'}`;
+                if (c.data) diaInput.value = c.data;
+                if (c.hora) horaInput.value = c.hora.substring(0, 5);
+            } else {
+                alert('Erro: ' + (data.message || 'Consulta não encontrada.'));
+                window.location.href = 'Area_Recepcao_Consultas.html';
+            }
+        } catch (error) {
+            alert('Erro de comunicação ao buscar dados da consulta.');
+            window.location.href = 'Area_Recepcao_Consultas.html';
+        }
+
+        // ===== CORREÇÃO DO AVISO DE JSON / JAVASCRIPT =====
+        if (formAlterar) {
+            formAlterar.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const motivoTextarea = document.getElementById('motivoAlteracao');
+                if (!diaInput.value || !horaInput.value || !motivoTextarea.value.trim()) {
+                    alert('Por favor, preencha a nova data, hora e o motivo da alteração.');
+                    return;
+                }
+
+                const dadosRemarcacao = {
+                    id_consulta: consultaId,
+                    novo_dia: diaInput.value,
+                    nova_hora: horaInput.value,
+                    motivo_remarcacao: motivoTextarea.value
+                };
+
+                try {
+                    const response = await fetch('../backend/recepcao_remarcar_consulta.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dadosRemarcacao)
+                    });
+
+                    // Lê primeiro como texto para evitar o erro "Failed to execute 'json'..."
+                    const rawText = await response.text();
+                    let resultado = null;
+
+                    if (rawText) {
+                        try {
+                            resultado = JSON.parse(rawText);
+                        } catch (parseError) {
+                            // Se a resposta não for um JSON válido, apenas registra no console
+                            console.warn('Resposta da remarcação não era JSON válido. Resposta bruta:', rawText, parseError);
+                        }
+                    } else {
+                        console.warn('Resposta vazia de recepcao_remarcar_consulta.php');
+                    }
+
+                    // Se veio JSON e indicou erro explícito, exibe para o usuário
+                    if (resultado && resultado.success === false) {
+                        alert('Erro ao remarcar consulta: ' + (resultado.message || 'Tente novamente.'));
+                        return;
+                    }
+
+                    // A partir daqui consideramos que deu certo:
+                    //   - ou resultado.success === true
+                    //   - ou não veio JSON, mas o servidor processou (caso em que antes dava o erro de JSON)
+                    const status = resultado && resultado.notification_status ? resultado.notification_status : null;
+
+                    if (modal && modalTitle && modalMessage) {
+                        switch (status) {
+                            case 'sent':
+                                modalTitle.textContent = "Sucesso!";
+                                modalMessage.textContent = "A consulta foi remarcada e o paciente notificado por WhatsApp.";
+                                break;
+                            case 'failed':
+                                modalTitle.textContent = "Atenção!";
+                                modalMessage.textContent = "A consulta foi remarcada, mas HOUVE UMA FALHA ao notificar o paciente. Verifique o número e a API.";
+                                break;
+                            case 'not_authorized':
+                                modalTitle.textContent = "Consulta Remarcada";
+                                modalMessage.textContent = "A consulta foi remarcada, mas o paciente não autorizou o envio de notificações por WhatsApp.";
+                                break;
+                            default:
+                                modalTitle.textContent = "Consulta Remarcada";
+                                modalMessage.textContent = "A consulta foi remarcada com sucesso.";
+                        }
+
+                        modal.style.display = 'flex';
+                    }
+
+                } catch (error) {
+                    // Aqui só cai se tiver erro real de rede / servidor indisponível
+                    alert('Erro de comunicação ao remarcar consulta: ' + error.message);
+                }
+            });
+        }
+        // ===== FIM DA CORREÇÃO =====
+
+        if (btnConfirmarModal) {
+            btnConfirmarModal.addEventListener('click', () => {
+                window.location.href = 'Area_Recepcao_Consultas.html';
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Recepção - Clinix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --clinix-primary-blue: #004aad;
+        --clinix-secondary-blue: #00b2ff;
+        --clinix-text-dark: #333333;
+        --clinix-text-medium: #555555;
+        --clinix-page-bg: #ffffff;
+        /* --- INÍCIO DA CORREÇÃO --- */
+        --clinix-danger-red: #dc3545;
+        --clinix-danger-red-light: #f8d7da;
+        --clinix-danger-red-dark: #721c24;
+        --clinix-success-green: #28a745;
+        /* --- FIM DA CORREÇÃO --- */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--clinix-page-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      padding: 20px; 
+    }
+
+    .menu-acessos-container {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+    }
+    .menu-acessos {
+      border: 2px solid var(--clinix-primary-blue);
+      border-radius: 15px; 
+      width: auto;
+      min-width: 130px; 
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden; 
+      transition: all 0.3s ease;
+    }
+    .menu-acessos-header {
+      background-color: var(--clinix-primary-blue);
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px 15px; 
+      font-size: 16px;
+      cursor: default; 
+    }
+    .menu-acessos-body {
+      color: black;
+      font-size: 15px;
+      text-align: center;
+      padding: 0; 
+      max-height: 0; 
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, padding 0.4s ease-out; 
+    }
+    .menu-acessos:hover .menu-acessos-body {
+        max-height: 200px; 
+        padding: 10px 15px; 
+    }
+
+    .menu-acessos-body a {
+      display: block;
+      text-decoration: none;
+      color: var(--clinix-text-dark);
+      margin: 8px 0;
+      font-weight: 500; 
+    }
+    .menu-acessos-body a:hover {
+        text-decoration: underline;
+        color: var(--clinix-text-dark);
+    }
+    .menu-acessos-body div {
+        font-weight: 500; 
+        color: var(--clinix-secondary-blue);
+        margin-bottom: 8px;
+        padding: 5px 0;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+    .logo img { 
+      width: 300px; 
+      max-width: 100%;
+    }
+    .titulo { 
+      font-size: 32px; 
+      font-weight: 700; 
+      margin-bottom: 25px;
+      color: var(--clinix-text-dark);
+    }
+
+    .formulario { 
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        width: 100%;
+        max-width: 400px; 
+        padding: 30px; 
+        border-radius: 10px;
+        /* --- INÍCIO DA CORREÇÃO --- */
+        position: relative; /* Necessário para posicionar a caixa de erro */
+        /* --- FIM DA CORREÇÃO --- */
+    }
+    
+    .form-group { 
+        width: 100%;
+        margin-bottom: 18px; 
+        text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px; 
+      font-weight: bold; 
+      font-size: 15px; 
+      color: var(--clinix-text-medium); 
+    }
+
+    input[type="email"], 
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 18px; 
+      margin-bottom: 5px; 
+      border: 1.5px solid var(--clinix-secondary-blue); 
+      border-radius: 25px; 
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      text-align: left; 
+    }
+    input[type="email"]:focus, 
+    input[type="password"]:focus {
+        border-color: var(--clinix-primary-blue); 
+        box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.2);
+        outline: none;
+    }
+
+    .botao { 
+      padding: 12px 40px; 
+      background-color: var(--clinix-primary-blue); 
+      color: white;
+      font-weight: bold;
+      font-size: 18px; 
+      border: none;
+      border-radius: 25px; 
+      cursor: pointer;
+      width: 100%; 
+      margin-top: 20px; 
+      display: block;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    .botao:hover {
+      background-color: #003a8c; 
+      transform: translateY(-1px);
+    }
+    .botao:active {
+      transform: translateY(0px);
+    }
+
+    /* --- INÍCIO DA CORREÇÃO --- */
+    #error-message-box {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--clinix-danger-red-light);
+        color: var(--clinix-danger-red-dark);
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--clinix-danger-red);
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 101;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, top 0.4s ease, visibility 0.4s;
+    }
+    #error-message-box.show {
+        top: -60px;
+        opacity: 1;
+        visibility: visible;
+    }
+    .input-error {
+        border-color: var(--clinix-danger-red) !important;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important;
+    }
+    .botao.success {
+        background-color: var(--clinix-success-green) !important;
+    }
+    .botao.error {
+        background-color: var(--clinix-danger-red) !important;
+    }
+    .botao:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    /* --- FIM DA CORREÇÃO --- */
+
+    @media (max-width: 480px) {
+        .logo img {
+            width: 250px; 
+        }
+        .titulo {
+            font-size: 28px;
+        }
+        .formulario {
+            padding: 20px; 
+        }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-acessos-container">
+    <div class="menu-acessos">
+      <div class="menu-acessos-header">Acessos</div>
+      <div class="menu-acessos-body">
+        <a href="Login_Paciente.html">Paciente</a>
+        <div>Recepção</div> 
+      </div>
+    </div>
+  </div>
+
+  <div class="logo">
+    <img src="../assets/icons/logo.png" alt="Logo Clinix">
+  </div>
+  <div class="titulo">Área da Recepção</div>
+
+  <form class="formulario" id="loginFormRecepcao" method="POST" action="../backend/login_recepcao.php">
+    <!-- --- INÍCIO DA CORREÇÃO --- -->
+    <div id="error-message-box"></div>
+    <!-- --- FIM DA CORREÇÃO --- -->
+    <div class="form-group">
+      <label for="emailRecepcao">E-MAIL</label>
+      <input type="email" id="emailRecepcao" name="email" required> 
+    </div>
+    <div class="form-group">
+      <label for="senhaOriginalRecepcao">SENHA</label>
+      <input type="password" id="senhaOriginalRecepcao" name="senha_original" required> 
+    </div>
+    <button class="botao" type="submit">Entrar</button>
+  </form>
+
+  <script>
+    // --- INÍCIO DA CORREÇÃO ---
+    const loginFormRecepcao = document.getElementById('loginFormRecepcao');
+    if (loginFormRecepcao) {
+        const emailInput = document.getElementById('emailRecepcao');
+        const senhaInput = document.getElementById('senhaOriginalRecepcao');
+        const loginButton = loginFormRecepcao.querySelector('button[type="submit"]');
+        const errorBox = document.getElementById('error-message-box');
+        const originalButtonText = loginButton.textContent;
+
+        function showErrorMessage(message) {
+            errorBox.textContent = message;
+            errorBox.classList.add('show');
+            setTimeout(() => {
+                errorBox.classList.remove('show');
+            }, 5000);
+        }
+
+        function clearErrors() {
+            emailInput.classList.remove('input-error');
+            senhaInput.classList.remove('input-error');
+            loginButton.classList.remove('error', 'success');
+            loginButton.textContent = originalButtonText;
+            loginButton.disabled = false;
+        }
+        
+        emailInput.addEventListener('input', clearErrors);
+        senhaInput.addEventListener('input', clearErrors);
+
+        loginFormRecepcao.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            clearErrors();
+
+            loginButton.disabled = true;
+            loginButton.textContent = 'Entrando...';
+
+            const formData = new FormData(loginFormRecepcao);
+            
+            try {
+                const response = await fetch(loginFormRecepcao.action, {
+                    method: loginFormRecepcao.method,
+                    body: formData 
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw data; // Lança o objeto de erro para o catch
+                }
+                
+                if (data.success) {
+                    loginButton.classList.add('success');
+                    loginButton.textContent = 'Sucesso!';
+                    sessionStorage.setItem('recepcionista_nome_sessao', data.nomeUsuario || 'Recepcionista');
+                    
+                    setTimeout(() => {
+                        let targetUrl = 'Area_Recepcao_Consultas.html';
+                        if (data.redirect) {
+                            if (data.redirect.startsWith('pages/')) {
+                                targetUrl = data.redirect.substring('pages/'.length);
+                            } else {
+                                targetUrl = data.redirect;
+                            }
+                        }
+                        window.location.href = targetUrl;
+                    }, 1000);
+
+                } else {
+                   throw data; // Lança o erro de negócio para o catch
+                }
+            } catch (error) {
+                console.error('Erro no login (recepção):', error);
+                
+                // Trata os diferentes tipos de erro
+                if (error.error_type === 'incorrect_credentials') {
+                    showErrorMessage('E-mail ou senha inválidos.');
+                    emailInput.classList.add('input-error');
+                    senhaInput.classList.add('input-error');
+                } else if (error.error_type === 'email_not_found') {
+                    showErrorMessage('E-mail não cadastrado, contate o administrador do sistema.');
+                    emailInput.classList.add('input-error');
+                } else {
+                    showErrorMessage(error.message || 'Ocorreu um erro inesperado.');
+                }
+
+                loginButton.classList.add('error');
+                loginButton.textContent = 'Falha no Login';
+
+                setTimeout(clearErrors, 5000);
+            }
+        });
+    }
+    // --- FIM DA CORREÇÃO ---
+  </script>
+
+</body>
+</html>

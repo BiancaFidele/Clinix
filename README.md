@@ -1,101 +1,67 @@
-# 🩺 Clinix — Sistema de Agendamento de Consultas
+# Clinix
 
-O **Clinix** é um sistema acadêmico de agendamento de consultas desenvolvido durante o curso de **Análise e Desenvolvimento de Sistemas da FATEC Taquaritinga**.
+Clinix é uma aplicação web para gestão de pacientes, agendamentos e atendimento de recepção, com fluxo de login para paciente e recepcionista.
 
-O projeto foi criado com o objetivo de aplicar conceitos de **desenvolvimento web, banco de dados relacional, SQL, modelagem de dados e análise de sistemas**.
+## Objetivo
 
-## 📌 Sobre o projeto
+Centralizar a experiência de agendamento, acompanhamento e administração de consultas em um sistema orientado a web, mantendo a navegação e os processos já existentes em HTML, CSS, JavaScript e PHP.
 
-O Clinix simula o funcionamento de um sistema para gerenciamento de consultas médicas, permitindo organizar informações relacionadas a pacientes, médicos, especialidades e agendamentos.
+## Tecnologias utilizadas
 
-Além do agendamento de consultas, o banco foi estruturado para contemplar situações como pré-reservas, cancelamentos, remarcações, histórico de consultas, envio de mensagens e períodos de indisponibilidade dos médicos.
+- HTML5
+- CSS3
+- JavaScript (vanilla)
+- PHP
+- SQL Server via PDO (driver `sqlsrv`)
+- PHPMailer
+- Twilio (para mensagens/WhatsApp)
 
-## 🗄️ Banco de Dados
+## Estrutura principal do projeto
 
-O banco de dados foi desenvolvido utilizando **Microsoft SQL Server**.
+```text
+Clinix/
+├── index.html
+├── README.md
+├── .gitignore
+├── web.config
+├── backend/
+│   ├── config.php
+│   ├── login_paciente.php
+│   ├── login_recepcao.php
+│   ├── ...
+│   └── PHPMailer/
+├── pages/
+│   ├── Login_Paciente.html
+│   ├── Cadastro_Paciente.html
+│   ├── Recuperacao_de_Senha.html
+│   ├── Area_Paciente.html
+│   ├── Agendamento_Paciente.html
+│   ├── Notificacoes_Paciente.html
+│   ├── Perfil_Paciente.html
+│   ├── Login_Recepcao.html
+│   ├── Area_Recepcao_Consultas.html
+│   ├── Area_Recepcao_Agendamento.html
+│   └── Area_Recepcao_Alteracao_Consulta.html
+├── assets/
+│   └── icons/
+│       ├── logo.png
+│       ├── notificacao.png
+│       ├── icon_editar.png
+│       ├── icon_deletar.png
+│       └── icon_perfil.png
+├── teste.php
+├── teste_conexao.php
+└── backend/
+```
 
-A estrutura possui as seguintes tabelas principais:
+## Como executar localmente
 
-* `especialidades` — cadastro das especialidades médicas;
-* `paciente` — informações cadastrais e de acesso dos pacientes;
-* `recepcionistas` — dados dos responsáveis pelo atendimento;
-* `medicos` — cadastro dos médicos e relacionamento com suas especialidades;
-* `consultas` — gerenciamento dos agendamentos;
-* `pre_reservas` — controle temporário de horários antes da confirmação;
-* `historico_consultas` — registro de cancelamentos, remarcações e alterações;
-* `mensagens_enviadas` — controle das comunicações relacionadas às consultas;
-* `feriados` — armazenamento de datas sem atendimento;
-* `medicos_inativos` — controle dos períodos de indisponibilidade dos médicos.
+1. Coloque a pasta do projeto em um ambiente com PHP habilitado, como XAMPP, WAMP ou IIS.
+2. Certifique-se de que a extensão `pdo_sqlsrv` esteja disponível no ambiente PHP.
+3. Ajuste as configurações do banco e das integrações no arquivo `backend/config.php`, caso necessário.
+4. Acesse o projeto por meio do arquivo raiz `index.html` ou diretamente em `pages/Login_Paciente.html`.
 
-## 🔗 Modelagem Relacional
+## Observações
 
-O banco utiliza relacionamentos entre suas tabelas por meio de **Primary Keys** e **Foreign Keys**.
-
-Entre os principais relacionamentos estão:
-
-* Especialidade → Médicos
-* Paciente → Consultas
-* Médico → Consultas
-* Paciente → Pré-reservas
-* Médico → Pré-reservas
-* Consulta → Histórico de consultas
-* Consulta → Mensagens enviadas
-* Médico → Períodos de inatividade
-
-Também foram utilizadas restrições `CHECK` para controlar determinados valores permitidos no sistema, como:
-
-* origem da criação da consulta;
-* status da consulta;
-* tipo de alteração no histórico;
-* tipo de mensagem enviada.
-
-## ⚙️ Funcionalidades representadas no banco
-
-A estrutura do banco permite representar processos como:
-
-* Cadastro de pacientes;
-* Cadastro de médicos e especialidades;
-* Cadastro de recepcionistas;
-* Agendamento de consultas;
-* Pré-reserva de horários;
-* Cancelamento e remarcação de consultas;
-* Registro do histórico de alterações;
-* Controle de status das consultas;
-* Registro de notificações enviadas;
-* Controle de feriados;
-* Controle de períodos de indisponibilidade médica.
-
-## 💻 Tecnologias utilizadas
-
-* HTML
-* CSS
-* SQL
-* Microsoft SQL Server
-* UML
-
-## 🎯 Conhecimentos aplicados
-
-Durante o desenvolvimento do projeto foram utilizados conceitos de:
-
-* Banco de dados relacional;
-* Modelagem de dados;
-* SQL;
-* Primary Keys e Foreign Keys;
-* Integridade referencial;
-* Restrições `CHECK`;
-* Relacionamentos entre entidades;
-* Análise de sistemas;
-* Desenvolvimento de interfaces web;
-* Diagramas UML.
-
-## 📚 Contexto acadêmico
-
-Projeto desenvolvido em **2025** durante o curso de **Tecnologia em Análise e Desenvolvimento de Sistemas — FATEC Taquaritinga**.
-
-O Clinix faz parte do meu portfólio acadêmico e demonstra a aplicação prática de conhecimentos relacionados principalmente a **Banco de Dados, SQL e Análise de Sistemas**.
-
-## 👩‍💻 Autora
-
-**Bianca Fidele**
-
-Estudante de Análise e Desenvolvimento de Sistemas, com foco em **Análise de Dados, Business Intelligence e Banco de Dados**.
+- O projeto já foi organizado para manter a navegação atual e os recursos visuais principais intactos.
+- A estrutura foi ajustada para facilitar versionamento em repositório GitHub sem alterar o funcionamento do sistema.

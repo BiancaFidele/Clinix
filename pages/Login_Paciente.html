@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Paciente - Clinix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --clinix-primary-blue: #004aad;
+        --clinix-secondary-blue: #00b2ff;
+        --clinix-text-dark: #333333;
+        --clinix-text-medium: #555555;
+        --clinix-page-bg: #ffffff;
+        --clinix-danger-red: #dc3545;
+        --clinix-danger-red-light: #f8d7da;
+        --clinix-danger-red-dark: #721c24;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--clinix-page-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .logo { margin-bottom: 20px; }
+    .logo img { width: 300px; max-width: 100%; }
+    .titulo { font-size: 32px; font-weight: 700; margin-bottom: 25px; color: var(--clinix-text-dark); }
+
+    .formulario {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      border-radius: 10px;
+      position: relative; 
+    }
+
+    .form-group { width: 100%; margin-bottom: 18px; }
+    
+    .form-group label {
+      font-weight: bold;
+      font-size: 15px; 
+      color: var(--clinix-text-medium);
+    }
+    
+    .label-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      width: 100%;
+      margin-bottom: 6px;
+    }
+
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 12px 18px;
+      margin-bottom: 5px;
+      border-radius: 25px; 
+      border: 1.5px solid var(--clinix-secondary-blue); 
+      outline: none;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="email"]:focus, input[type="password"]:focus {
+        border-color: var(--clinix-primary-blue); 
+        box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.2);
+    }
+    
+    .link-esqueci, .link-cadastro a {
+      color: var(--clinix-secondary-blue); 
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .link-esqueci:hover, .link-cadastro a:hover {
+        text-decoration: underline;
+        color: var(--clinix-primary-blue);
+    }
+
+    .link-cadastro { margin-top: 15px; margin-bottom: 25px; font-size: 14px; color: var(--clinix-text-medium); }
+
+    .botao {
+      background-color: var(--clinix-primary-blue);
+      color: white;
+      padding: 12px 40px;
+      border: none;
+      border-radius: 25px; 
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+    .botao:hover { background-color: #003a8c; transform: translateY(-1px); }
+    .botao:active { transform: translateY(0px); }
+
+    .rodape {
+      position: fixed; bottom: 20px; right: 25px; font-size: 13px;
+      color: var(--clinix-text-medium); text-align: right; z-index: 50;
+    }
+    
+    #error-message-box {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--clinix-danger-red-light);
+        color: var(--clinix-danger-red-dark);
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--clinix-danger-red);
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 101;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, top 0.4s ease, visibility 0.4s;
+    }
+    #error-message-box.show {
+        top: -60px;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .input-error {
+        border-color: var(--clinix-danger-red) !important;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important;
+    }
+
+    .button-error {
+        background-color: var(--clinix-danger-red) !important;
+    }
+    
+    .menu-acessos-container { position: absolute; top: 20px; left: 20px; z-index: 100; }
+    .menu-acessos { border: 2px solid var(--clinix-primary-blue); border-radius: 15px; width: auto; min-width: 130px; background-color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; transition: all 0.3s ease; }
+    .menu-acessos-header { background-color: var(--clinix-primary-blue); color: white; font-weight: bold; text-align: center; padding: 10px 15px; font-size: 16px; cursor: default; }
+    .menu-acessos-body { color: black; font-size: 15px; text-align: center; padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out; }
+    .menu-acessos:hover .menu-acessos-body { max-height: 200px; padding: 10px 15px; }
+    .menu-acessos-body div { font-weight: 500; color: var(--clinix-secondary-blue); margin-bottom: 8px; padding: 5px 0; }
+    .menu-acessos-body a { display: block; text-decoration: none; color: var(--clinix-text-dark); margin: 8px 0; font-weight: 500; }
+    .menu-acessos-body a:hover { text-decoration: underline; color: var(--clinix-text-dark); }
+
+    @media (max-width: 768px) {
+        .logo { margin-top: 60px; }
+        .logo img { width: 250px; }
+        .titulo { font-size: 28px; }
+        .formulario { padding: 20px; }
+        .rodape { position: static; text-align: center; margin-top: 30px; width: 100%; }
+        #error-message-box.show { top: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="menu-acessos-container">
+    <div class="menu-acessos">
+      <div class="menu-acessos-header">Acessos</div>
+      <div class="menu-acessos-body">
+        <div>Paciente</div>
+        <a href="Login_Recepcao.html">Recepção</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo">
+    <img src="../assets/icons/logo.png" alt="Logo da Clinix">
+  </div>
+
+  <div class="titulo">Área do Paciente</div>
+
+  <form class="formulario" id="loginForm" method="POST" action="../backend/login_paciente.php">
+    <div id="error-message-box"></div>
+    <div class="form-group">
+      <label for="email">E-MAIL</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    
+    <div class="form-group">
+      <div class="label-wrapper">
+          <label for="senhaOriginal">SENHA</label>
+          <a href="Recuperacao_de_Senha.html" class="link-esqueci">Esqueceu a senha?</a>
+      </div>
+      <input type="password" id="senhaOriginal" name="senha_original" required>
+    </div>
+    
+    <div class="link-cadastro">
+      Usuário novo? 
+      <a href="Cadastro_Paciente.html">Clique Aqui</a>
+    </div>
+
+    <button class="botao" id="loginButton" type="submit">Entrar</button>
+  </form>
+
+  <div class="rodape" id="rodape-contato"></div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      const emailInput = document.getElementById('email');
+      const senhaInput = document.getElementById('senhaOriginal');
+      const loginButton = document.getElementById('loginButton');
+      const errorBox = document.getElementById('error-message-box');
+
+      function showErrorMessage(message) {
+        errorBox.textContent = message;
+        errorBox.classList.add('show');
+        setTimeout(() => {
+          errorBox.classList.remove('show');
+        }, 5000);
+      }
+
+      function clearErrors() {
+        emailInput.classList.remove('input-error');
+        senhaInput.classList.remove('input-error');
+      }
+
+      emailInput.addEventListener('input', clearErrors);
+      senhaInput.addEventListener('input', clearErrors);
+
+      loginForm.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        clearErrors();
+
+        const formData = new FormData(loginForm);
+        
+        // --- INÍCIO DA CORREÇÃO ---
+        fetch(loginForm.action, { method: loginForm.method, body: formData })
+        .then(response => response.json()) // Sempre tenta parsear a resposta como JSON
+        .then(data => {
+            // Se o backend retornou sucesso, redireciona
+            if (data.success) {
+                const redirectTarget = data.redirect ? (
+                    data.redirect.startsWith('pages/') ? data.redirect.substring('pages/'.length) : data.redirect
+                ) : 'Area_Paciente.html';
+                window.location.href = redirectTarget;
+            } else {
+                // Se não teve sucesso, trata os diferentes tipos de erro
+                console.error('Falha no login:', data);
+                if (data.error_type === 'incorrect_credentials') {
+                    showErrorMessage('Email ou Senha incorretos.');
+                    emailInput.classList.add('input-error');
+                    senhaInput.classList.add('input-error');
+                    loginButton.classList.add('button-error');
+                    setTimeout(() => {
+                        loginButton.classList.remove('button-error');
+                    }, 5000);
+                } else if (data.error_type === 'email_not_found') {
+                    showErrorMessage('Email não encontrado, crie uma nova conta.');
+                    emailInput.classList.add('input-error');
+                } else {
+                    // Outros erros genéricos
+                    showErrorMessage(data.message || 'Ocorreu um erro inesperado.');
+                }
+            }
+        })
+        .catch(error => {
+            // Este catch agora lida com erros de rede ou JSON inválido
+            console.error('Erro de comunicação ou parsing:', error);
+            showErrorMessage('Não foi possível conectar ao servidor. Verifique sua internet.');
+        });
+        // --- FIM DA CORREÇÃO ---
+      });
+    }
+  </script>
+  
+  <script>
+    // Script do rodapé (sem alterações)
+    document.addEventListener('DOMContentLoaded', function() {
+      const rodapeContatoDiv = document.getElementById('rodape-contato');
+      fetch('../backend/obter_config.php')
+        .then(response => response.json())
+        .then(data => {
+          if (rodapeContatoDiv && data && data.contato) {
+            rodapeContatoDiv.innerHTML = `Para mais informações telefone: <strong>${data.contato}</strong>`;
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao buscar informações de contato:', error);
+        });
+    });
+  </script>
+</body>
+</html>
