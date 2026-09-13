@@ -19,18 +19,18 @@ require_once 'config.php';
 function enviarWhatsApp($para, $mensagem)
 {
     // Verifica se as credenciais foram definidas no config.php
-    if (!defined('TWILIO_ACCOUNT_SID') || !defined('TWILIO_AUTH_TOKEN') || TWILIO_ACCOUNT_SID === 'SEU_ACCOUNT_SID_AQUI') {
+    if (!defined('...') || !defined('...') || ... === 'SEU_ACCOUNT_SID_AQUI') {
         error_log("WhatsApp Service Error: Credenciais do Twilio não configuradas no arquivo config.php.");
         return false;
     }
 
-    $accountSid = TWILIO_ACCOUNT_SID;
-    $authToken = TWILIO_AUTH_TOKEN;
-    $fromWhatsAppNumber = TWILIO_WHATSAPP_FROM;
+    $accountSid = ...;
+    $authToken = ...;
+    $fromWhatsAppNumber = ...;
     $toWhatsAppNumber = 'whatsapp:+' . $para; // Twilio exige o prefixo 'whatsapp:+'
 
     // Monta a URL da API
-    $url = "https://api.twilio.com/2010-04-01/Accounts/{$accountSid}/Messages.json";
+    $url = "...";
 
     // Prepara os dados para a API do Twilio
     $postData = http_build_query([
